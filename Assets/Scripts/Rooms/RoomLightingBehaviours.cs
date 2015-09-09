@@ -5,52 +5,34 @@ using System.Collections;
 public class RoomLightingBehaviours : MonoBehaviour
 {
 	public SpriteRenderer darknessRenderer;
-	bool fadingIn, fadingOut;
+	bool fadeIn, fadeOut;
 	public bool preLit, manualLit;
 
 	void Awake()
 	{
 		//Sets up room's lighting button.
-		if(!preLit)
-		{
-			transform.parent.FindChild("Console View Canvas").FindChild("Lights Button").GetComponent<Button>().onClick.AddListener(lightSwitchEvent);
-		}
-	}
+		transform.parent.FindChild("Console View Canvas").FindChild("Lights Button").GetComponent<Button>().onClick.AddListener(lightSwitchEvent);
 
-	//Fades out the darkness overlay if player enters room.
-	void OnTriggerEnter2D(Collider2D colliderCheck)
-	{
-		if(colliderCheck.tag == "Player")
-		{
-			if(!fadingOut)
-				StartCoroutine(FadeOut());
-		}
-	}
-
-	//Fades in the darkness overlay if player exits room.
-	void OnTriggerExit2D(Collider2D colliderCheck)
-	{
-		if(colliderCheck.tag == "Player")
-		{
-			if(!fadingIn)
-				StartCoroutine(FadeIn());
-		}
+		//Fades out the darkness on awake if the room is meant to start off lit.
+		if(preLit)
+			StartCoroutine(FadeOut());
+		else
+			fadeIn = true;
 	}
 
 	//Called via the room's lights button.
 	public void lightSwitchEvent()
 	{
-		print("Switch clicked");
-		if(manualLit)
-			manualLit = false;
-		else
-			manualLit = true;
+		if(fadeOut)
+			StartCoroutine(FadeIn());
+		else if(fadeIn)
+			StartCoroutine(FadeOut());
 	}
 
 	IEnumerator FadeIn()
 	{
-		fadingOut = false;
-		fadingIn = true;
+		fadeOut = false;
+		fadeIn = true;
 		darknessRenderer.enabled = true;
 		Color placeholderColor = darknessRenderer.color;
 		float startTime = Time.time;
@@ -60,7 +42,7 @@ public class RoomLightingBehaviours : MonoBehaviour
 		{
 			placeholderColor.a = Mathf.Lerp(placeholderColor.a, 1f, ((Time.time-startTime)/placeholderColor.a)*Time.deltaTime*10);
 			darknessRenderer.color = placeholderColor;
-			if(fadingOut)
+			if(fadeOut)
 				break;
 			yield return null;
 		}
@@ -68,42 +50,22 @@ public class RoomLightingBehaviours : MonoBehaviour
 
 	IEnumerator FadeOut()
 	{
-		fadingIn = false;
-		fadingOut = true;
-
-		//If room is not pre-lit or powered, the lights only go up a tiny bit.
-		if(preLit||manualLit)
+		fadeIn = false;
+		fadeOut = true;
+		Color placeholderColor = darknessRenderer.color;
+		float startTime = Time.time;
+		
+		placeholderColor.a -= 0.2f;
+		while(placeholderColor.a > 0.02f)
 		{
-			Color placeholderColor = darknessRenderer.color;
-			float startTime = Time.time;
-			
-			placeholderColor.a -= 0.2f;
-			while(placeholderColor.a > 0.02f)
-			{
-				placeholderColor.a = Mathf.Lerp(placeholderColor.a, 0f, ((Time.time-startTime)/(placeholderColor.a))*Time.deltaTime*10);
-				darknessRenderer.color = placeholderColor;
-                if(fadingIn)
-                    break;
-                yield return null;
-			}
+			placeholderColor.a = Mathf.Lerp(placeholderColor.a, 0f, ((Time.time-startTime)/(placeholderColor.a))*Time.deltaTime*10);
+			darknessRenderer.color = placeholderColor;
+            if(fadeIn)
+                break;
+            yield return null;
+		}
 
-			if(!fadingIn)
-				darknessRenderer.enabled = false;
-        }
-        else
-		{
-			Color placeholderColor = darknessRenderer.color;
-			float startTime = Time.time;
-			
-			placeholderColor.a -= 0.2f;
-			while(placeholderColor.a > 0.85f)
-			{
-				placeholderColor.a = Mathf.Lerp(placeholderColor.a, 0f, ((Time.time-startTime)/(placeholderColor.a))*Time.deltaTime*10);
-				darknessRenderer.color = placeholderColor;
-				if(fadingIn)
-                    break;
-                yield return null;
-            }
-        }
+		if(!fadeIn)
+			darknessRenderer.enabled = false;
 	}
 }
