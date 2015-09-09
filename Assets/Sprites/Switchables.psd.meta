@@ -1,0 +1,234 @@
+fileFormatVersion: 2
+guid: f2deb2cca55d2324da2c6c08c636a2af
+timeCreated: 1431015242
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Door 1
+    21300002: Door 2
+    21300004: Door 3
+    21300006: Fan
+    21300008: Trapdoor 1
+    21300010: Jump Pad
+    21300012: Transparent
+    21300014: Trapdoor 2
+    21300016: Trapdoor 3
+    21300018: Teleporter Off
+    21300020: Teleporter On
+    21300022: Console
+    21300024: Override
+    21300026: Sweeperbot Door 1
+    21300028: Sweeperbot Door 2
+    21300030: Sweeperbot Door 3
+    21300032: Sweeperbot Door
+    21300034: Sweeperbot Door Back
+    21300036: Vent
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: Door 1
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 188
+        width: 100
+        height: 800
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Door 2
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 188
+        width: 100
+        height: 800
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Door 3
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 187
+        width: 101
+        height: 801
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Fan
+      rect:
+        serializedVersion: 2
+        x: 426
+        y: 238
+        width: 97
+        height: 699
+      alignment: 4
+      pivot: {x: 0, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Trapdoor 1
+      rect:
+        serializedVersion: 2
+        x: 574
+        y: 188
+        width: 400
+        height: 100
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Jump Pad
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 63
+        width: 800
+        height: 92
+      alignment: 7
+      pivot: {x: .5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Transparent
+      rect:
+        serializedVersion: 2
+        x: 404
+        y: 1042
+        width: 150
+        height: 150
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Trapdoor 2
+      rect:
+        serializedVersion: 2
+        x: 574
+        y: 332
+        width: 399
+        height: 99
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Trapdoor 3
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 470
+        width: 399
+        height: 99
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Teleporter Off
+      rect:
+        serializedVersion: 2
+        x: 1063
+        y: 63
+        width: 798
+        height: 35
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Teleporter On
+      rect:
+        serializedVersion: 2
+        x: 1064
+        y: 138
+        width: 796
+        height: 35
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Console
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 1037
+        width: 150
+        height: 150
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Override
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 1037
+        width: 151
+        height: 150
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Sweeperbot Door
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 1231
+        width: 248
+        height: 798
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Sweeperbot Door Back
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 1220
+        width: 648
+        height: 818
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Vent
+      rect:
+        serializedVersion: 2
+        x: 573
+        y: 683
+        width: 302
+        height: 301
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
