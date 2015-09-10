@@ -29,7 +29,7 @@ public class RoomBuilderScript : MonoBehaviour
 	public Vector2 roomDimensions;
 	public Vector2 roomPosition;
 	Bounds roomBounds;
-	public bool preLit;
+	public bool darkened, preLit;
 
 	//BG Art
 	public int selectedBGArt;
@@ -91,14 +91,15 @@ public class RoomBuilderScript : MonoBehaviour
 		roomArea.transform.localScale = roomDimensions;
 		roomBounds = roomArea.GetComponent<Collider2D>().bounds;
 
-		//Create Darkness Overlay
-		CreateDarkness();
-
 		//Creates Console View Canvas
 		CreateConsoleViewCanvas();
-		//Creates Lights Button
-		if(!preLit)
+
+		//Create Darkness Overlay and LightsButton
+		if(darkened)
+		{
+			CreateDarkness();
 			CreateLightsButton();
+		}
 
         //Create Doors
 		BuildDoors();
@@ -112,7 +113,16 @@ public class RoomBuilderScript : MonoBehaviour
 		CreateBackground();
 	}
 	
-
+	//Creates Console View Canvas.
+	void CreateConsoleViewCanvas()
+	{
+		consoleViewCanvasPrefab = Resources.Load ("Console View Canvas");
+		consoleViewCanvas = (GameObject)PrefabUtility.InstantiatePrefab(consoleViewCanvasPrefab);
+		
+		consoleViewCanvas.transform.SetParent(room.transform);
+		consoleViewCanvas.transform.localPosition = Vector2.zero;
+		consoleViewCanvas.GetComponent<RectTransform>().sizeDelta = roomDimensions;
+	}
 
 	//Creates the darkness overlay in the room for lighting effects.
 	void CreateDarkness()
@@ -122,23 +132,12 @@ public class RoomBuilderScript : MonoBehaviour
 		
 		darknessOverlay.transform.SetParent(room.transform);
 		darknessOverlay.transform.localPosition = Vector2.zero;
-		darknessOverlay.transform.localScale = roomDimensions;
+		darknessOverlay.transform.localScale = roomDimensions + new Vector2(2,2);
 		
 		if(preLit)
 			darknessOverlay.GetComponent<RoomLightingBehaviours>().preLit = true;
 		else
 			darknessOverlay.GetComponent<RoomLightingBehaviours>().preLit = false;
-	}
-	
-	//Creates Console View Canvas.
-	void CreateConsoleViewCanvas()
-	{
-		consoleViewCanvasPrefab = Resources.Load ("Console View Canvas");
-		consoleViewCanvas = (GameObject)PrefabUtility.InstantiatePrefab(consoleViewCanvasPrefab);
-
-		consoleViewCanvas.transform.SetParent(room.transform);
-		consoleViewCanvas.transform.localPosition = Vector2.zero;
-		consoleViewCanvas.GetComponent<RectTransform>().sizeDelta = roomDimensions;
 	}
 
 	//Creates room's lighting button on the button canvas for console view.

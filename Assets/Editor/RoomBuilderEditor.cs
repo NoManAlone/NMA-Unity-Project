@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 using System.Collections;
@@ -57,10 +57,12 @@ public class RoomBuilderEditor : Editor
 		builderScript.consoleOffset = EditorGUILayout.FloatField(builderScript.consoleOffset, GUILayout.MaxWidth(100));
 		GUILayout.EndHorizontal();
 		
-		//Prelit
+		//Darkened and Prelit
 		GUILayout.Label("");
 		GUILayout.BeginHorizontal();
-		GUILayout.Label ("Prelit:", boldFont);
+		GUILayout.Label ("Darkened:", boldFont);
+		builderScript.darkened = EditorGUILayout.Toggle(builderScript.darkened);
+		GUILayout.Label ("Prelit:");
 		builderScript.preLit = EditorGUILayout.Toggle(builderScript.preLit);
 		GUILayout.EndHorizontal();
 
