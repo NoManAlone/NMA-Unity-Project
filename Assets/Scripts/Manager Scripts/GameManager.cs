@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 	public Transform p1Spawn,p2Spawn;
 	public GameObject splitScreenDivider;
 
-	void Start () 
+	void Awake () 
 	{
 		//These variables can be called directly from any script
 		t1p = testing_1p;
