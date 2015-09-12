@@ -132,7 +132,7 @@ public class RoomBuilderScript : MonoBehaviour
 		
 		darknessOverlay.transform.SetParent(room.transform);
 		darknessOverlay.transform.localPosition = Vector2.zero;
-		darknessOverlay.transform.localScale = roomDimensions + new Vector2(2,2);
+		darknessOverlay.transform.localScale = roomDimensions;
 		
 		if(preLit)
 			darknessOverlay.GetComponent<RoomLightingBehaviours>().preLit = true;

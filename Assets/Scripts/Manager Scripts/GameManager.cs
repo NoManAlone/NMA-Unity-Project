@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
 	public Transform p1Spawn,p2Spawn;
 	public GameObject splitScreenDivider;
 
+	public GameObject myPlayer;
+
 	void Awake () 
 	{
 		//These variables can be called directly from any script
@@ -77,5 +79,7 @@ public class GameManager : MonoBehaviour
 		player.GetComponent<PlayerAudio>().enabled = true;
 		player.transform.FindChild("Camera").gameObject.SetActive(true);
 		//player.transform.FindChild("Particle Emitter").gameObject.SetActive(true);
+
+		myPlayer = player;
 	}
 }

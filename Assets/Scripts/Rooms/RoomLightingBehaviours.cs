@@ -7,9 +7,12 @@ public class RoomLightingBehaviours : MonoBehaviour
 	public SpriteRenderer darknessRenderer;
 	bool fadeIn, fadeOut;
 	public bool preLit, manualLit;
+	GameManager gameManager;
 
 	void Awake()
 	{
+		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
 		//Sets up room's lighting button.
 		transform.parent.FindChild("Console View Canvas").FindChild("Lights Button").GetComponent<Button>().onClick.AddListener(lightSwitchEvent);
 
@@ -21,12 +24,16 @@ public class RoomLightingBehaviours : MonoBehaviour
 	}
 
 	//Called via the room's lights button.
+	[PunRPC]
 	public void lightSwitchEvent()
 	{
-		if(fadeOut)
-			StartCoroutine(FadeIn());
-		else if(fadeIn)
-			StartCoroutine(FadeOut());
+		if(gameManager.myPlayer.GetComponent<PlayerControl>().usingConsole)
+		{
+			if(fadeOut)
+				StartCoroutine(FadeIn());
+			else if(fadeIn)
+				StartCoroutine(FadeOut());
+		}
 	}
 
 	IEnumerator FadeIn()
