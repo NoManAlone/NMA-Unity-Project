@@ -7,7 +7,11 @@ public class PlayerControl : MonoBehaviour
 {
 	public int playerID;
 
+	//Cameras
 	GameObject consoleCamera, playerCamera;
+
+	//PowerManager
+	PowerManager powerManager;
 
 	//Input Keys
 	public KeyCode left, right, jump, consoleButton;
@@ -41,6 +45,9 @@ public class PlayerControl : MonoBehaviour
 		playerCamera = transform.FindChild("Camera").gameObject;
 		consoleCamera = GameObject.Find("Console Camera").gameObject;
 		consoleCamera.SetActive(false);
+
+		//Initialises PowerManager.
+		powerManager = GameObject.Find("PowerMeter").GetComponent<PowerManager>();
 
 		//Initialises Animator and Colliders.
 		anim = GetComponent<Animator>();
@@ -187,6 +194,14 @@ public class PlayerControl : MonoBehaviour
 		else
 			boosting = false;
 
+		if(!grounded && Input.GetKeyDown(jump) && jumpCount == 2)
+		{
+			powerManager.JetpackDepletion(2);
+		}
+		else if(Input.GetKeyUp(jump))
+		{
+			powerManager.depleting = false;
+		}
 	}
 
 	// 2: Movement
@@ -230,17 +245,17 @@ public class PlayerControl : MonoBehaviour
 
 				EnableParticles(false);
 
-//				try
-//				{
-//					GetComponent<PhotonView>().RPC("EnableParticles", PhotonPlayer.Find(otherPlayerID), false);
-//				}
-//
-//				catch(Exception e)
-//				{
-//					Debug.LogWarning(e);
-//				}
-//
-//				//GetComponent<PlayerAudio>().Boost(false);
+////				try
+////				{
+////					GetComponent<PhotonView>().RPC("EnableParticles", PhotonPlayer.Find(otherPlayerID), false);
+////				}
+////
+////				catch(Exception e)
+////				{
+////					Debug.LogWarning(e);
+////				}
+////
+////				//GetComponent<PlayerAudio>().Boost(false);
 			}
 			
 			

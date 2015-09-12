@@ -8,31 +8,49 @@ public class RoomLightingBehaviours : MonoBehaviour
 	bool fadeIn, fadeOut;
 	public bool preLit, manualLit;
 	GameManager gameManager;
+	PowerManager powerManager;
+	PhotonView photonView;
 
 	void Awake()
 	{
 		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+		powerManager = GameObject.Find("PowerMeter").GetComponent<PowerManager>();
+		photonView = GetComponent<PhotonView>();
 
 		//Sets up room's lighting button.
 		transform.parent.FindChild("Console View Canvas").FindChild("Lights Button").GetComponent<Button>().onClick.AddListener(lightSwitchEvent);
 
 		//Fades out the darkness on awake if the room is meant to start off lit.
 		if(preLit)
+		{
+			powerManager.AlterThreshold(-10);
 			StartCoroutine(FadeOut());
+		}
 		else
 			fadeIn = true;
 	}
 
 	//Called via the room's lights button.
-	[PunRPC]
 	public void lightSwitchEvent()
+	{
+		photonView.RPC("lightSwitchCall", PhotonTargets.AllBuffered);
+	}
+	
+	[PunRPC]
+	void lightSwitchCall()
 	{
 		if(gameManager.myPlayer.GetComponent<PlayerControl>().usingConsole)
 		{
 			if(fadeOut)
+			{
+				powerManager.AlterThreshold(10);
 				StartCoroutine(FadeIn());
+			}
 			else if(fadeIn)
+			{
+				powerManager.AlterThreshold(-10);
 				StartCoroutine(FadeOut());
+			}
 		}
 	}
 

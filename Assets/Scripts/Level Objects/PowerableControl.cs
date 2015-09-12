@@ -8,11 +8,11 @@ public class PowerableControl : MonoBehaviour
 
 	int otherPlayerID;
 
-	PowerManager powerManager;
+	PowerManagerOld powerManager;
 
 	void Start()
 	{
-		powerManager = GameObject.Find("Console").GetComponent<PowerManager>();
+		powerManager = GameObject.Find("Console").GetComponent<PowerManagerOld>();
 	}
 
 	void Update () 

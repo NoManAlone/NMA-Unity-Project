@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ public class ConsoleUI : MonoBehaviour
 
 	void Start()
 	{	
-		moduleCount = GetComponent<PowerManager>().powerModuleCount;
+		moduleCount = GetComponent<PowerManagerOld>().powerModuleCount;
 
 		canvas = GameObject.Find("ConsoleUI");
 		powerModules = new List<Image>();
@@ -25,7 +25,7 @@ public class ConsoleUI : MonoBehaviour
 			CreatePowerModule();
 		}
 
-		SetPowered(GameObject.Find ("Console").GetComponent<PowerManager>().availablePower);
+		SetPowered(GameObject.Find ("Console").GetComponent<PowerManagerOld>().availablePower);
 
 		//Set ConsoleUI Inactive
 		canvas.SetActive(false);
