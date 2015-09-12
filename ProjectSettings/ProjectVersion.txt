@@ -1,5 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 m_EditorVersion: 5.2.0f3
+=======
+m_EditorVersion: 5.1.1f1
+>>>>>>> origin/Andrew
 =======
 m_EditorVersion: 5.1.1f1
 >>>>>>> origin/Andrew
