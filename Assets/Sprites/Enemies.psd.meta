@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 4149311679b804f4f991b500f3ac598e
-timeCreated: 1431105110
+timeCreated: 1442254826
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -8,6 +8,7 @@ TextureImporter:
     21300002: Sweeperbot
     21300004: Scan Default
     21300006: Scan Detected
+    21300008: Enemy
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -41,6 +42,7 @@ TextureImporter:
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
+  allowsAlphaSplitting: 0
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
@@ -53,45 +55,15 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: Helibot
+    - name: Enemy
       rect:
         serializedVersion: 2
-        x: 147
-        y: 4398
-        width: 814
-        height: 423
+        x: 136
+        y: 4211
+        width: 448
+        height: 647
       alignment: 0
       pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Sweeperbot
-      rect:
-        serializedVersion: 2
-        x: 1447
-        y: 3978
-        width: 456
-        height: 808
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Scan Default
-      rect:
-        serializedVersion: 2
-        x: 122
-        y: 3676
-        width: 1005
-        height: 520
-      alignment: 9
-      pivot: {x: .00865873229, y: .604736805}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Scan Detected
-      rect:
-        serializedVersion: 2
-        x: 122
-        y: 3099
-        width: 1005
-        height: 523
-      alignment: 9
-      pivot: {x: .00865873229, y: .597193658}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
