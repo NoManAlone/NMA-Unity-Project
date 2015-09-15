@@ -48,10 +48,6 @@ public class RoomBuilderScript : MonoBehaviour
 		public float offset; //Offset from centre axis of room.
 	}
 	public DoorProperties[] doors = new DoorProperties[0];
-	
-	//Console
-	public bool consoleRoom;
-	public float consoleOffset;
 
 	//Prefabs
 	Object roomAreaPrefab;
@@ -105,9 +101,6 @@ public class RoomBuilderScript : MonoBehaviour
 		BuildDoors();
 		//Create Walls
 		BuildWalls();
-		//Create Console
-		if(consoleRoom)
-			CreateConsole();
 
 		//Create Background Art
 		CreateBackground();
@@ -471,17 +464,6 @@ public class RoomBuilderScript : MonoBehaviour
 				}
 			}
 		}
-	}
-	
-	//Creates the console object in the room.
-	void CreateConsole()
-	{
-		consolePrefab = Resources.Load ("Console");
-		console = (GameObject)PrefabUtility.InstantiatePrefab(consolePrefab);
-		console.name = "Console";
-		console.transform.SetParent(room.transform);
-		
-		console.transform.localPosition = new Vector2(consoleOffset, -(roomBounds.extents.y) + console.GetComponent<Collider2D>().bounds.extents.y);
 	}
 
 	//Creates the background art canvas of the room.

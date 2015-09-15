@@ -7,13 +7,7 @@ public class PowerableControl : MonoBehaviour
 	public LayerMask clickableLayermask;
 
 	int otherPlayerID;
-
-	PowerManagerOld powerManager;
-
-	void Start()
-	{
-		powerManager = GameObject.Find("Console").GetComponent<PowerManagerOld>();
-	}
+	
 
 	void Update () 
 	{
@@ -30,8 +24,6 @@ public class PowerableControl : MonoBehaviour
 				//If component is powered
 				if(hit.transform.parent.GetComponent<Power>().powered)
 				{
-					powerManager.IncreaseAvailablePower(hit.transform.parent.GetComponent<Power>().powerCost);
-
 					//Toggle Power state
 					hit.transform.parent.GetComponent<Power>().TogglePowered(hit.transform.parent.tag);
 
@@ -49,11 +41,10 @@ public class PowerableControl : MonoBehaviour
 				//If component is unpowered
 				else
 				{
- 				    if(hit.transform.parent.GetComponent<Power>().powerCost <= powerManager.availablePower)//if enough available. power turn on
-					{
-						powerManager.DecreaseAvailablePower(hit.transform.parent.GetComponent<Power>().powerCost);
-						hit.transform.parent.GetComponent<Power>().TogglePowered(hit.transform.parent.tag);
-
+// 				    if(hit.transform.parent.GetComponent<Power>().powerCost <= powerManager.availablePower)//if enough available. power turn on
+//					{
+//						hit.transform.parent.GetComponent<Power>().TogglePowered(hit.transform.parent.tag);
+//
 //						try
 //						{
 //							hit.transform.parent.GetComponent<PhotonView>().RPC("TogglePowered", PhotonPlayer.Find(otherPlayerID), hit.transform.parent.tag);
@@ -63,7 +54,7 @@ public class PowerableControl : MonoBehaviour
 //						{
 //							Debug.LogWarning(e);
 //						}
-					}
+//					}
 				}
 			}
 		}

@@ -47,15 +47,6 @@ public class RoomBuilderEditor : Editor
 		GUILayout.Label("Right");
 		builderScript.wallRight = EditorGUILayout.Toggle(builderScript.wallRight);
 		EditorGUILayout.EndHorizontal();
-
-		//Console
-		GUILayout.Label("");
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("Console:", boldFont);
-		builderScript.consoleRoom = EditorGUILayout.Toggle(builderScript.consoleRoom);
-		GUILayout.Label("Offset:");
-		builderScript.consoleOffset = EditorGUILayout.FloatField(builderScript.consoleOffset, GUILayout.MaxWidth(100));
-		GUILayout.EndHorizontal();
 		
 		//Darkened and Prelit
 		GUILayout.Label("");

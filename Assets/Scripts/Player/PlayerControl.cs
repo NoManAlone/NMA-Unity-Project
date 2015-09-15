@@ -69,15 +69,7 @@ public class PlayerControl : MonoBehaviour
 	}
 
 	void OnTriggerEnter2D(Collider2D collidercheck)
-	{     
-		//Console
-		if(collidercheck.gameObject.tag=="Console")
-		{
-			consoleOverlap=true;
-			interactObject = collidercheck.gameObject;
-			interactObject.GetComponent<ConsoleProperties>().showHideButtonOverlay(true);
-		} 
-		
+	{   
 		//Override
 		if(collidercheck.gameObject.tag=="Override")
 		{
@@ -106,12 +98,6 @@ public class PlayerControl : MonoBehaviour
 	
 	void OnTriggerExit2D(Collider2D collidercheck)
 	{
-		if(collidercheck.gameObject.tag=="Console")
-		{
-			consoleOverlap=false;
-			interactObject.GetComponent<ConsoleProperties>().showHideButtonOverlay(false);
-		}
-		
 		//Override
 		if(collidercheck.gameObject.tag=="Override")
 		{
@@ -228,21 +214,15 @@ public class PlayerControl : MonoBehaviour
 			}
 			
 			
-			if(boosting && GetComponent<PlayerStats>().power > 0)
+			if(boosting)
 			{
 				playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, moveSpeed);
-				GetComponent<PlayerStats>().DecreasePower(true);
-
 				EnableParticles(true);
-
 				//GetComponent<PlayerAudio>().Boost(true);
 			}
 			
 			else
 			{
-
-				GetComponent<PlayerStats>().DecreasePower(false);
-
 				EnableParticles(false);
 
 ////				try

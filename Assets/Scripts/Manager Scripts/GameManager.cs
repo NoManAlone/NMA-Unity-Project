@@ -75,7 +75,6 @@ public class GameManager : MonoBehaviour
 
 		//Enable player scripts
 		player.GetComponent<PlayerControl>().enabled = true;
-		player.GetComponent<PlayerStats>().enabled = true;
 		player.GetComponent<PlayerAudio>().enabled = true;
 		player.transform.FindChild("Camera").gameObject.SetActive(true);
 		//player.transform.FindChild("Particle Emitter").gameObject.SetActive(true);
