@@ -33,24 +33,24 @@ public class RoomLightingBehaviours : MonoBehaviour
 	//Called via the room's lights button.
 	public void lightSwitchEvent()
 	{
-		photonView.RPC("lightSwitchCall", PhotonTargets.AllBuffered);
+		if(gameManager.myPlayer.GetComponent<PlayerControl>().usingConsole)
+		{
+			photonView.RPC("lightSwitchCall", PhotonTargets.AllBuffered);
+		}
 	}
 	
 	[PunRPC]
 	void lightSwitchCall()
 	{
-		if(gameManager.myPlayer.GetComponent<PlayerControl>().usingConsole)
+		if(fadeOut)
 		{
-			if(fadeOut)
-			{
-				powerManager.AlterThreshold(10);
-				StartCoroutine(FadeIn());
-			}
-			else if(fadeIn)
-			{
-				powerManager.AlterThreshold(-10);
-				StartCoroutine(FadeOut());
-			}
+			powerManager.AlterThreshold(10);
+			StartCoroutine(FadeIn());
+		}
+		else if(fadeIn)
+		{
+			powerManager.AlterThreshold(-10);
+			StartCoroutine(FadeOut());
 		}
 	}
 

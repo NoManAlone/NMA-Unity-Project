@@ -6,9 +6,10 @@ using System.Collections.Generic;
 public class PlayerControl : MonoBehaviour 
 {
 	public int playerID;
+	PhotonView powerMeterPhotonView;
 
 	//Cameras
-	GameObject consoleCamera, playerCamera;
+	public GameObject consoleCamera, playerCamera;
 
 	//PowerManager
 	PowerManager powerManager;
@@ -17,20 +18,20 @@ public class PlayerControl : MonoBehaviour
 	public KeyCode left, right, jump, consoleButton;
 
 	//bools
+	public bool isPlayer1;
 	public bool grounded, moving, movingRight, movingLeft, jumping, boosting, usingConsole, teleporting;
-	public bool consoleOverlap, teleporterOverlap, switchOverlap, overrideOverlap;
+	public bool teleporterOverlap;
 	bool facingRight = true;
-	bool tutorialViewed = false;
 
 	//Physics Values
 	float moveSpeed = 10, jumpForce = 1000;
 	public GameObject interactObject;
 
-	public int jumpCount = 0;
+	public bool jumpedTwice = false;
 
 	Rigidbody2D playerRigidbody;
 
-	CircleCollider2D []colliders;
+	CircleCollider2D[] colliders;
 	CircleCollider2D feetCollider;
 
 	public LayerMask physicalColliders;
@@ -41,10 +42,7 @@ public class PlayerControl : MonoBehaviour
 	
 	void Awake()
 	{
-		//Initialises Camera objects.
-		playerCamera = transform.FindChild("Camera").gameObject;
-		consoleCamera = GameObject.Find("Console Camera").gameObject;
-		consoleCamera.SetActive(false);
+		powerMeterPhotonView = GameObject.Find("PowerMeter").GetComponent<PhotonView>();
 
 		//Initialises PowerManager.
 		powerManager = GameObject.Find("PowerMeter").GetComponent<PowerManager>();
@@ -59,7 +57,6 @@ public class PlayerControl : MonoBehaviour
 	void Update()
 	{
 		Controls();
-//		InteractControl();
 		Animation();
 	}
 
@@ -69,13 +66,7 @@ public class PlayerControl : MonoBehaviour
 	}
 
 	void OnTriggerEnter2D(Collider2D collidercheck)
-	{   
-		//Override
-		if(collidercheck.gameObject.tag=="Override")
-		{
-			overrideOverlap=true;
-		}  
-		
+	{  
 		//JumpPad
 		if(collidercheck.gameObject.tag=="JumpPad")
 		{
@@ -98,12 +89,6 @@ public class PlayerControl : MonoBehaviour
 	
 	void OnTriggerExit2D(Collider2D collidercheck)
 	{
-		//Override
-		if(collidercheck.gameObject.tag=="Override")
-		{
-			overrideOverlap=false;
-		} 
-		
 		if(collidercheck.gameObject.tag=="Teleporter")
 			teleporterOverlap=false;
 	}
@@ -172,21 +157,21 @@ public class PlayerControl : MonoBehaviour
 		}
 
 		else if(!grounded && !usingConsole && (Input.GetKeyDown(jump)  || (Input.GetButtonDown("Jump") && playerID == 2)))
-			jumpCount = 2;
+			jumpedTwice = true;
 
-		if(!grounded && (Input.GetKey(jump)  || (Input.GetButton("Jump") && playerID == 2))  && jumpCount == 2)
+		if(!grounded && (Input.GetKey(jump)  || (Input.GetButton("Jump") && playerID == 2))  && jumpedTwice)
 			boosting = true;
 
 		else
 			boosting = false;
 
-		if(!grounded && Input.GetKeyDown(jump) && jumpCount == 2)
+		if(!grounded && Input.GetKeyDown(jump) && jumpedTwice)
 		{
-			powerManager.JetpackDepletion(2);
+			powerMeterPhotonView.RPC("JetpackStart", PhotonTargets.AllBuffered, isPlayer1);
 		}
-		else if(Input.GetKeyUp(jump))
+		else if(!grounded && Input.GetKeyUp(jump) && jumpedTwice)
 		{
-			powerManager.depleting = false;
+			powerMeterPhotonView.RPC("JetpackStop", PhotonTargets.AllBuffered, isPlayer1);
 		}
 	}
 
@@ -250,7 +235,7 @@ public class PlayerControl : MonoBehaviour
 			if(Physics2D.Raycast(feetCollider.bounds.center , -Vector2.up, feetCollider.bounds.extents.y + 0.01f, physicalColliders))//!!! .1f value?
 			{
 				grounded = true;
-				jumpCount = 0;
+				jumpedTwice = false;
 			}
 			
 			else
@@ -269,59 +254,7 @@ public class PlayerControl : MonoBehaviour
 		}	
 	}
 
-	// 3: Interact
-//	void InteractControl()
-//	{
-//		if(Input.GetKeyDown(interact))
-//		{
-//			//Console
-//			if(consoleOverlap)
-//			{
-//				if(usingConsole)
-//				{
-//					usingConsole = false;
-//
-//					interactObject.GetComponent<ConsoleProperties>().DeactivateConsole();
-//					interactObject.GetComponent<ConsoleProperties>().endConsoleInteraction(gameObject);
-//
-////					try
-////					{
-////						interactObject.GetComponent<PhotonView>().RPC("DeactivateConsole", PhotonPlayer.Find(otherPlayerID));
-////					}
-////
-////					catch(Exception e)
-////					{
-////						Debug.LogWarning(e);
-////                  }
-//				}	
-//				
-//				else if(interactObject.GetComponent<ConsoleProperties>().occupied == false)
-//				{
-//					usingConsole = true;
-//
-//					interactObject.GetComponent<ConsoleProperties>().ActivateConsole(gameObject);
-//					interactObject.GetComponent<ConsoleProperties>().startConsoleInteraction(gameObject);
-//
-////					try
-////					{
-////						interactObject.GetComponent<PhotonView>().RPC("ActivateConsole", PhotonPlayer.Find(otherPlayerID), null);
-////					}
-////
-////					catch(Exception e)
-////					{
-////						Debug.LogWarning(e);
-////					}
-//
-//					GetComponent<AudioSource>().PlayDelayed(0f);
-//					if(!tutorialViewed)
-//					{
-//						tutorialViewed = true;
-//					}
-//				}
-//			}
-//		}
-//	}
-
+	// 3: Jumping
 	IEnumerator Jumping()
 	{
 		jumping = true;
@@ -347,6 +280,7 @@ public class PlayerControl : MonoBehaviour
 			Flip();	
 	}
 
+	// 5: Flip
 	void Flip()
 	{
 		// Switch the way the player is labelled as facing
@@ -358,16 +292,10 @@ public class PlayerControl : MonoBehaviour
 		transform.localScale = theScale;
     }
 	
-	// 5: Enable Particles
+	// 6: Enable Particles
 	[PunRPC]
 	void EnableParticles(bool enabled)
 	{
 		transform.FindChild("Particle Emitter").GetComponent<ParticleSystem>().enableEmission = enabled;
-	}
-
-	// 6: Activate Console
-	void activateConsole()
-	{
-
 	}
 }

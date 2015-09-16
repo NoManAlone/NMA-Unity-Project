@@ -6,11 +6,10 @@ public class PowerManager : MonoBehaviour
 {
 	public float startingMaxPower;
 	public float power, threshold, maxPower;
+	public float depletionRate = 0;
 	Text powerText, thresholdText, maxPowerText;
 
-	public bool depleting;
-
-	public IEnumerator jetpackDepletion;
+	public bool p1Jetpacking = false, p2Jetpacking = false;
 
 	PhotonView photonView;
 
@@ -33,8 +32,10 @@ public class PowerManager : MonoBehaviour
 
 	void Update()
 	{
-		if(!depleting)
+		if(!p1Jetpacking&&!p2Jetpacking)
 			RechargePower();
+		else
+			DepletePower();
 	}
 
 	public void AlterMaxPower(int alterValue)
@@ -63,7 +64,6 @@ public class PowerManager : MonoBehaviour
 		powerText.text = power.ToString();
 	}
 
-	[PunRPC]
 	public void RechargePower()
 	{
 		if(power<threshold)
@@ -74,25 +74,35 @@ public class PowerManager : MonoBehaviour
 		powerText.text = power.ToString();
 	}
 
-	[PunRPC]
-	public void JetpackDepletion(float depletionRate)
+	public void DepletePower()
 	{
-		jetpackDepletion = DepletePower(depletionRate);
-		StartCoroutine(jetpackDepletion);
+		if(power>0)
+			power = power - Time.deltaTime*depletionRate;
+		else
+			power = 0;
+		
+		powerText.text = power.ToString();
 	}
-
-	public IEnumerator DepletePower(float depletionRate)
+	
+	[PunRPC]
+	public void JetpackStart(bool isPlayer1)
 	{
-		depleting = true;
-		while(power>0 && depleting)
-		{
-			yield return null;
-			if(power>0)
-				power = power - Time.deltaTime*depletionRate;
-			else
-				power = 0;
-			
-			powerText.text = power.ToString();
-		}
+		if(isPlayer1)
+			p1Jetpacking = true;
+		else
+			p2Jetpacking = true;
+		
+		depletionRate += 2;
+	}
+	
+	[PunRPC]
+	public void JetpackStop(bool isPlayer1)
+	{
+		if(isPlayer1)
+			p1Jetpacking = false;
+		else
+			p2Jetpacking = false;
+		
+		depletionRate -= 2;
 	}
 }

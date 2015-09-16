@@ -25,7 +25,6 @@ public class GameManager : MonoBehaviour
 
 		else if(testing_2p)
 		{
-			GameObject.Find("OxygenMeterAndPowerMeter").SetActive(false);
 			splitScreenDivider.SetActive(true);
 
 			Instantiate(Resources.Load ("Player 1 Split") , p1Spawn.position, Quaternion.identity);
