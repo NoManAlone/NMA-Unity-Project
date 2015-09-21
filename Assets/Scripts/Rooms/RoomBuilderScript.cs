@@ -43,7 +43,7 @@ public class RoomBuilderScript : MonoBehaviour
 	public int doorCount;
 	public struct DoorProperties
 	{
-		public bool prePowered;
+		public bool openAtStart;
 		public bool top, bottom, left, right; //Orientation in walls.
 		public float offset; //Offset from centre axis of room.
 	}
@@ -125,7 +125,7 @@ public class RoomBuilderScript : MonoBehaviour
 		
 		darknessOverlay.transform.SetParent(room.transform);
 		darknessOverlay.transform.localPosition = Vector2.zero;
-		darknessOverlay.transform.localScale = roomDimensions;
+		darknessOverlay.transform.localScale = roomDimensions + new Vector2(1, 1);
 		
 		if(preLit)
 			darknessOverlay.GetComponent<RoomLightingBehaviours>().preLit = true;
@@ -154,8 +154,10 @@ public class RoomBuilderScript : MonoBehaviour
 			door.name = "Door";
 			door.transform.SetParent(room.transform);
 
-			if(doors[counter].prePowered) //Sets door to be powered.
-				door.GetComponent<Power>().powered = true;
+			if(doors[counter].openAtStart) //Sets door to be powered.
+				door.GetComponent<DoorBehaviours>().open = true;
+			else
+				door.GetComponent<DoorBehaviours>().open = false;
 
 			if(doors[counter].top||doors[counter].bottom) //Sets rotation of the door.
 				door.transform.Rotate(0, 0, 90);

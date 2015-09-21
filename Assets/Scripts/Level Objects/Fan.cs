@@ -7,11 +7,11 @@ public class Fan : MonoBehaviour
 	{
 		transform.FindChild("Particles").GetComponent<ParticleSystem>().enableEmission = false;
 
-		if(GetComponent<Power>().powered)
-			FanOn();
-		
-		else
-			FanOff();
+//		if(GetComponent<Power>().powered)
+//			FanOn();
+//		
+//		else
+//			FanOff();
 	}
 
 	public void SetPowered(bool power)

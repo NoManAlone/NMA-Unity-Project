@@ -131,7 +131,7 @@ public class RoomBuilderEditor : Editor
 			GUILayout.EndHorizontal();
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Powered:");
-			builderScript.doors[counter].prePowered = EditorGUILayout.Toggle(builderScript.doors[counter].prePowered, GUILayout.MaxWidth(70));
+			builderScript.doors[counter].openAtStart = EditorGUILayout.Toggle(builderScript.doors[counter].openAtStart, GUILayout.MaxWidth(70));
 			GUILayout.EndHorizontal();
 			GUILayout.EndHorizontal();
 		}
