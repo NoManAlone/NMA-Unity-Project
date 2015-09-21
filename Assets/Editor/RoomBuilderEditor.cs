@@ -130,7 +130,7 @@ public class RoomBuilderEditor : Editor
 			builderScript.doors[counter].offset = EditorGUILayout.FloatField(builderScript.doors[counter].offset, GUILayout.MaxWidth(70));
 			GUILayout.EndHorizontal();
 			GUILayout.BeginHorizontal();
-			GUILayout.Label("Powered:");
+			GUILayout.Label("Open:");
 			builderScript.doors[counter].openAtStart = EditorGUILayout.Toggle(builderScript.doors[counter].openAtStart, GUILayout.MaxWidth(70));
 			GUILayout.EndHorizontal();
 			GUILayout.EndHorizontal();

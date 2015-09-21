@@ -13,7 +13,7 @@ public class PowerManager : MonoBehaviour
 
 	PhotonView photonView;
 
-	void Start()
+	void Awake()
 	{
 		photonView = GetComponent<PhotonView>();
 

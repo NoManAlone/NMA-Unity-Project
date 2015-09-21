@@ -65,7 +65,6 @@ public class GameManager : MonoBehaviour
 
 		else
 			SpawnPlayer("Player 2", p1Spawn.position);
-
 	}
 
 	void SpawnPlayer(string playerName, Vector3 spawnPosition)
