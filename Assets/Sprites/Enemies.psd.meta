@@ -1,14 +1,14 @@
 fileFormatVersion: 2
 guid: 4149311679b804f4f991b500f3ac598e
-timeCreated: 1442254826
+timeCreated: 1442850897
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Helibot
+    21300000: Enemy
     21300002: Sweeperbot
     21300004: Scan Default
     21300006: Scan Detected
-    21300008: Enemy
+    21300008: Enemy 2
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -58,10 +58,10 @@ TextureImporter:
     - name: Enemy
       rect:
         serializedVersion: 2
-        x: 136
-        y: 4211
-        width: 448
-        height: 647
+        x: 234
+        y: 4069
+        width: 472
+        height: 699
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}

@@ -8,7 +8,7 @@ public class BasicPatrol : MonoBehaviour
     public float changeDirLength = 2;
 
     Rigidbody2D enemyRB;
-    BoxCollider2D collider;
+    BoxCollider2D enemyCollider;
 
     public LayerMask collisions;
 
@@ -18,7 +18,7 @@ public class BasicPatrol : MonoBehaviour
     void Start ()
     {
         enemyRB = GetComponent<Rigidbody2D>();
-        collider = GetComponent<BoxCollider2D>();
+        enemyCollider = GetComponent<BoxCollider2D>();
 
         StartCoroutine(Patrol());
     }
@@ -28,31 +28,61 @@ public class BasicPatrol : MonoBehaviour
     {
 
         //Grouded check
-        Debug.DrawLine(collider.bounds.center, new Vector2(collider.bounds.center.x, collider.bounds.center.y - 1.7f), Color.magenta);
-        if (Physics2D.Raycast(collider.bounds.center, -Vector2.up, 1.7f, collisions))
+        if (Physics2D.Raycast(enemyCollider.bounds.center, -Vector2.up, 1.8f, collisions))
             grounded = true;
 
         else
         {
             grounded = false;
-        }  
+        }
+
+        if (GameManager.debug)
+            Debug.DrawLine(enemyCollider.bounds.center, new Vector2(enemyCollider.bounds.center.x, enemyCollider.bounds.center.y - 1.8f), Color.yellow);
 
         //Wall check
-        if (patrolling)
+        if (patrolling)// if at wall change direction
         {
-            if(movingRight)
+            if (movingRight)
             {
-                hit = Physics2D.Raycast(collider.bounds.center, Vector2.right, changeDirLength, collisions);
-                Debug.DrawLine(collider.bounds.center, new Vector2(collider.bounds.center.x + changeDirLength, collider.bounds.center.y), Color.magenta);  
+                hit = Physics2D.Raycast(enemyCollider.bounds.center, Vector2.right, changeDirLength, collisions);
+
+                if (GameManager.debug)
+                    Debug.DrawRay(enemyCollider.bounds.center, Vector2.right * 3, Color.red);
+
             }
 
             else
             {
-                hit = Physics2D.Raycast(collider.bounds.center, -Vector2.right, changeDirLength, collisions);
-                Debug.DrawLine(collider.bounds.center, new Vector2(collider.bounds.center.x - changeDirLength, collider.bounds.center.y), Color.magenta);
+                hit = Physics2D.Raycast(enemyCollider.bounds.center, -Vector2.right, changeDirLength, collisions);
+
+                if (GameManager.debug)
+                    Debug.DrawRay(enemyCollider.bounds.center, -Vector2.right * 3, Color.red);
             }
 
             if (hit)
+                ChangeDirection();
+        }
+
+        //Edge Check
+        if (patrolling && grounded)//if close at edge change direction 
+        {
+            if (movingRight)
+            {
+                hit = Physics2D.Raycast(enemyCollider.bounds.center, new Vector2(1, -.5f), 5, collisions);
+
+                if (GameManager.debug)
+                    Debug.DrawRay(enemyCollider.bounds.center, new Vector2(1, -.5f) * 4, Color.blue);
+            }
+
+            else
+            {
+                hit = Physics2D.Raycast(enemyCollider.bounds.center, new Vector2(-1, -.5f), 5, collisions);
+
+                if(GameManager.debug)
+                    Debug.DrawRay(enemyCollider.bounds.center, new Vector2(-1, -.5f) * 4, Color.blue);
+            }
+
+            if (!hit)
                 ChangeDirection();
         }
     }
