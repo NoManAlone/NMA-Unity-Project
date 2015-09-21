@@ -28,6 +28,7 @@ public class PlayerControl : MonoBehaviour
 	public GameObject interactObject;
 
 	public bool jumpedTwice = false;
+	bool knockback;
 
 	Rigidbody2D playerRigidbody;
 
@@ -39,7 +40,9 @@ public class PlayerControl : MonoBehaviour
 	Animator anim;
 
 	public int collidingWall;
-	
+
+	float enemyHitPosX;
+
 	void Awake()
 	{
 		powerMeterPhotonView = GameObject.Find("PowerMeter").GetComponent<PhotonView>();
@@ -93,7 +96,12 @@ public class PlayerControl : MonoBehaviour
 			teleporterOverlap=false;
 	}
 
-	
+	void OnCollisionEnter2D(Collision2D collider)
+	{
+		if (collider.gameObject.tag == "Enemy")
+			StartCoroutine(EnemyKnockback(collider.gameObject.transform));
+	}
+
 	// 1: Controls
 	void Controls()
 	{
@@ -178,7 +186,7 @@ public class PlayerControl : MonoBehaviour
 	// 2: Movement
 	void Movement()
 	{
-		if(!usingConsole)
+		if(!usingConsole && !knockback)
 		{
 			if(movingRight && collidingWall != 1)
 			{
@@ -245,13 +253,25 @@ public class PlayerControl : MonoBehaviour
 			if(playerRigidbody.velocity.y > 20)
 				playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, 20);
 		}
-
-
+	
 		else
 		{
-			playerRigidbody.velocity = new Vector2(0, 0);
 			moving = false;
-		}	
+			
+			if(knockback)
+			{
+				if(enemyHitPosX < gameObject.transform.position.x )
+					playerRigidbody.velocity = new Vector2(15, 2);
+				
+				else
+					playerRigidbody.velocity = new Vector2(-15, 2);
+			}
+			
+			else
+			{
+				playerRigidbody.velocity = new Vector2(0, 0);   
+            }	
+        }	
 	}
 
 	// 3: Jumping
@@ -298,4 +318,21 @@ public class PlayerControl : MonoBehaviour
 	{
 		transform.FindChild("Particle Emitter").GetComponent<ParticleSystem>().enableEmission = enabled;
 	}
+
+	// 7: Enemy Knockback
+	IEnumerator EnemyKnockback(Transform enemyTrans)
+	{
+		enemyHitPosX = enemyTrans.position.x;
+		
+		knockback = true;
+		gameObject.layer = 14;
+		
+		yield return new WaitForSeconds(.2f);
+		
+		knockback = false;
+		
+		yield return new WaitForSeconds(1.8f);
+		
+		gameObject.layer = 8;
+    }
 }

@@ -1,82 +1,131 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BasicPatrol : MonoBehaviour 
+public class BasicPatrol : MonoBehaviour
 {
+    public bool movingRight, patrolling, grounded;
+    public float moveSpeed = 8;
+    public float changeDirLength = 2;
 
-	public bool patrolling, movingRight;
-	float moveSpeed = 7;
+    Rigidbody2D enemyRB;
+    BoxCollider2D enemyCollider;
 
-	Collider2D collider;
-	float lineOfSight = 5;
+    public LayerMask collisions;
 
-	RaycastHit2D hit;
+    RaycastHit2D hit;
 
-	public LayerMask collisions;
+    // Use this for initialization
+    void Start ()
+    {
+        enemyRB = GetComponent<Rigidbody2D>();
+        enemyCollider = GetComponent<BoxCollider2D>();
 
-	Rigidbody2D enemyRigidbody;
-
-
-	// Use this for initialization
-	void Start () 
-	{
-		collider = GetComponent<Collider2D>();
-
-		enemyRigidbody = GetComponent<Rigidbody2D>();
-
-		StartCoroutine(Patrol());
-	}
+        StartCoroutine(Patrol());
+    }
 	
 	// Update is called once per frame
-	void Update () 
-	{
-		if (movingRight) 
-		{
-			hit = Physics2D.Raycast (collider.bounds.center, Vector2.right, collider.bounds.extents.x + lineOfSight, collisions);
-			Debug.DrawLine(transform.position, new Vector2(collider.bounds.center.x + lineOfSight, transform.position.y), Color.yellow);
-		}
-			
+	void Update ()
+    {
 
-		else 
-			hit = Physics2D.Raycast (collider.bounds.center, -Vector2.right, collider.bounds.extents.x + lineOfSight, collisions);
+        //Grouded check
+        if (Physics2D.Raycast(enemyCollider.bounds.center, -Vector2.up, 1.8f, collisions))
+            grounded = true;
 
-		if (hit) 
-		{
-			ChangeDirection ();
-		}
-	}
+        else
+        {
+            grounded = false;
+        }
 
-	IEnumerator Patrol()
-	{
-		patrolling = true;
+        if (GameManager.debug)
+            Debug.DrawLine(enemyCollider.bounds.center, new Vector2(enemyCollider.bounds.center.x, enemyCollider.bounds.center.y - 1.8f), Color.yellow);
 
-		while (patrolling && movingRight) //Coroutine exits when these conditions are false
-		{
-			enemyRigidbody.velocity = new Vector2 (moveSpeed, enemyRigidbody.velocity.y);
-			yield return null;//no time specified so will loop on next frame
-		}
+        //Wall check
+        if (patrolling)// if at wall change direction
+        {
+            if (movingRight)
+            {
+                hit = Physics2D.Raycast(enemyCollider.bounds.center, Vector2.right, changeDirLength, collisions);
 
-		while(patrolling && !movingRight)
-		{
-			enemyRigidbody.velocity = new Vector2 (-moveSpeed, enemyRigidbody.velocity.y);
-			yield return null;//no time specified so will loop on next frame
-		}
-//		
-//		while(patrolling && !movingRight)
-//		{
-//			transform.position = Vector2.Lerp(transform.position, new Vector2(transform.position.x - 1, transform.position.y), Time.deltaTime * moveSpeed);
-//			yield return null;
-//		}
-	}
+                if (GameManager.debug)
+                    Debug.DrawRay(enemyCollider.bounds.center, Vector2.right * 3, Color.red);
 
-	void ChangeDirection()
-	{
-		if (movingRight)
-			movingRight = false;
+            }
 
-		else
-			movingRight = true;
+            else
+            {
+                hit = Physics2D.Raycast(enemyCollider.bounds.center, -Vector2.right, changeDirLength, collisions);
 
-		StartCoroutine(Patrol());
-	}
+                if (GameManager.debug)
+                    Debug.DrawRay(enemyCollider.bounds.center, -Vector2.right * 3, Color.red);
+            }
+
+            if (hit)
+                ChangeDirection();
+        }
+
+        //Edge Check
+        if (patrolling && grounded)//if close at edge change direction 
+        {
+            if (movingRight)
+            {
+                hit = Physics2D.Raycast(enemyCollider.bounds.center, new Vector2(1, -.5f), 5, collisions);
+
+                if (GameManager.debug)
+                    Debug.DrawRay(enemyCollider.bounds.center, new Vector2(1, -.5f) * 4, Color.blue);
+            }
+
+            else
+            {
+                hit = Physics2D.Raycast(enemyCollider.bounds.center, new Vector2(-1, -.5f), 5, collisions);
+
+                if(GameManager.debug)
+                    Debug.DrawRay(enemyCollider.bounds.center, new Vector2(-1, -.5f) * 4, Color.blue);
+            }
+
+            if (!hit)
+                ChangeDirection();
+        }
+    }
+
+    IEnumerator Patrol()
+    {
+        patrolling = true;
+               
+        while(patrolling)
+        {
+            while (grounded && movingRight)
+            {
+                enemyRB.velocity = new Vector2(moveSpeed, enemyRB.velocity.y);
+                yield return null;
+            }
+
+            while (grounded && !movingRight)
+            {
+                enemyRB.velocity = new Vector2(-moveSpeed, enemyRB.velocity.y);
+                yield return null;
+            }
+       
+            yield return null;
+        } 
+    }
+
+    void ChangeDirection()
+    {
+        if (movingRight)
+            movingRight = false;
+
+        else
+            movingRight = true;
+    }
+
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.tag == "Fan")
+        {
+            if(collider.GetComponent<Power>().powered == true)
+            {
+                enemyRB.velocity = Vector2.zero;
+            }
+        }
+    }
 }
