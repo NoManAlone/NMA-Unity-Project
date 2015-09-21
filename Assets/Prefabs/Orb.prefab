@@ -26,7 +26,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 102562}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13.1999998, y: 15, z: 0}
+  m_LocalPosition: {x: 73.8766022, y: -7.65037918, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -46,7 +46,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!58 &5806662
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -68,9 +68,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 102562}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50cb6893dd6ff4c70a2c3c5de5f62e38, type: 3}
+  m_Script: {fileID: 11500000, guid: 2a8efe26454f9974aaeab30acc4d14d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startCorner: 0
+  moveClockwise: 1
 --- !u!212 &21214560
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -93,9 +95,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
+  m_SortingLayerID: -782226361
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300010, guid: 4149311679b804f4f991b500f3ac598e, type: 3}
+  m_Sprite: {fileID: 21300012, guid: 4149311679b804f4f991b500f3ac598e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:
@@ -103,7 +105,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_Constraints
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 102562}

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 4149311679b804f4f991b500f3ac598e
-timeCreated: 1442850897
+timeCreated: 1442852956
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -9,6 +9,10 @@ TextureImporter:
     21300004: Scan Default
     21300006: Scan Detected
     21300008: Enemy 2
+    21300010: EnemyBasic
+    21300012: EnemyOrb
+    21300014: SpotlightYellow
+    21300016: SpotlightRed
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -55,13 +59,43 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: Enemy
+    - name: EnemyBasic
       rect:
         serializedVersion: 2
-        x: 234
-        y: 4069
-        width: 472
-        height: 699
+        x: 133
+        y: 4205
+        width: 454
+        height: 655
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: EnemyOrb
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 4205
+        width: 413
+        height: 414
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: SpotlightYellow
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 2667
+        width: 1003
+        height: 523
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: SpotlightRed
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 2091
+        width: 1003
+        height: 523
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
