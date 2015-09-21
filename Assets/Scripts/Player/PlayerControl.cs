@@ -325,7 +325,7 @@ public class PlayerControl : MonoBehaviour
 		enemyHitPosX = enemyTrans.position.x;
 		
 		knockback = true;
-		gameObject.layer = 14;
+		gameObject.layer = 16;
 		
 		yield return new WaitForSeconds(.2f);
 		

@@ -11,9 +11,10 @@ GameObject:
   - 212: {fileID: 21242352}
   - 61: {fileID: 6197236}
   - 114: {fileID: 11411256}
-  m_Layer: 0
+  - 50: {fileID: 5023738}
+  m_Layer: 13
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25,11 +26,27 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 151896}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 21.3911037, y: -4.31476021, z: 0}
+  m_LocalPosition: {x: 42.4632454, y: -5.03260422, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!50 &5023738
+Rigidbody2D:
+  serializedVersion: 2
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 151896}
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: .0500000007
+  m_GravityScale: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!61 &6197236
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -54,8 +71,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaa5c9d3987b9f44dba4911c8f9dc8ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrolling: 0
   movingRight: 0
+  patrolling: 0
+  grounded: 0
+  moveSpeed: 8
+  changeDirLength: 2
   collisions:
     serializedVersion: 2
     m_Bits: 2048
@@ -95,6 +115,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: collisions.m_Bits
       value: 2048
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: movingRight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Constraints
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

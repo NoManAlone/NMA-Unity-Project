@@ -117,15 +117,4 @@ public class BasicPatrol : MonoBehaviour
         else
             movingRight = true;
     }
-
-    void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.tag == "Fan")
-        {
-            if(collider.GetComponent<Power>().powered == true)
-            {
-                enemyRB.velocity = Vector2.zero;
-            }
-        }
-    }
 }
