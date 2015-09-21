@@ -6,25 +6,32 @@ using System.Collections.Generic;
 public class PlayerControl : MonoBehaviour 
 {
 	public int playerID;
+	PhotonView powerMeterPhotonView;
+
+	//Cameras
+	public GameObject consoleCamera, playerCamera;
+
+	//PowerManager
+	PowerManager powerManager;
 
 	//Input Keys
-	public KeyCode left, right, jump, interact;
+	public KeyCode left, right, jump, consoleButton;
 
 	//bools
-	public bool grounded, moving, movingRight, movingLeft, jumping, boosting, interacting, teleporting;
-	public bool consoleOverlap, teleporterOverlap, switchOverlap, overrideOverlap;
+	public bool isPlayer1;
+	public bool grounded, moving, movingRight, movingLeft, jumping, boosting, usingConsole, teleporting;
+	public bool teleporterOverlap;
 	bool facingRight = true;
-	bool tutorialViewed = false;
 
 	//Physics Values
 	float moveSpeed = 10, jumpForce = 1000;
 	public GameObject interactObject;
 
-	public int jumpCount = 0;
+	public bool jumpedTwice = false;
 
 	Rigidbody2D playerRigidbody;
 
-	CircleCollider2D []colliders;
+	CircleCollider2D[] colliders;
 	CircleCollider2D feetCollider;
 
 	public LayerMask physicalColliders;
@@ -32,9 +39,15 @@ public class PlayerControl : MonoBehaviour
 	Animator anim;
 
 	public int collidingWall;
-
-	void Start()
+	
+	void Awake()
 	{
+		powerMeterPhotonView = GameObject.Find("PowerMeter").GetComponent<PhotonView>();
+
+		//Initialises PowerManager.
+		powerManager = GameObject.Find("PowerMeter").GetComponent<PowerManager>();
+
+		//Initialises Animator and Colliders.
 		anim = GetComponent<Animator>();
 		playerRigidbody = GetComponent<Rigidbody2D>();
 		colliders = gameObject.GetComponents<CircleCollider2D>();
@@ -43,8 +56,7 @@ public class PlayerControl : MonoBehaviour
 
 	void Update()
 	{
-		MovementControls();
-		InteractControl();
+		Controls();
 		Animation();
 	}
 
@@ -53,10 +65,57 @@ public class PlayerControl : MonoBehaviour
 		Movement();
 	}
 
-	// 1: Movement Controls
-	void MovementControls()
+	void OnTriggerEnter2D(Collider2D collidercheck)
+	{  
+		//JumpPad
+		if(collidercheck.gameObject.tag=="JumpPad")
+		{
+			GameObject jumpad = collidercheck.gameObject;
+			
+			if(jumpad.GetComponent<JumpPad>().on)
+			{
+				playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, 0);
+				playerRigidbody.AddForce(new Vector2(playerRigidbody.velocity.x, jumpad.GetComponent<JumpPad>().force));
+			}	
+		}	
+		
+		//Teleporter
+		if(collidercheck.gameObject.tag=="Teleporter")
+		{
+			teleporterOverlap=true;
+			interactObject = collidercheck.transform.parent.gameObject;
+		}
+	}
+	
+	void OnTriggerExit2D(Collider2D collidercheck)
 	{
-		if(!interacting)
+		if(collidercheck.gameObject.tag=="Teleporter")
+			teleporterOverlap=false;
+	}
+
+	
+	// 1: Controls
+	void Controls()
+	{
+		// Console control.
+		if(Input.GetKeyDown(consoleButton))
+		{
+			if(usingConsole)
+			{
+				consoleCamera.SetActive(false);
+				playerCamera.SetActive(true);
+				usingConsole = false;
+			}
+			else
+			{
+				playerCamera.SetActive(false);
+				consoleCamera.SetActive(true);
+				usingConsole = true;
+			}
+		}
+
+		// Movement controls.
+		if(!usingConsole)
 		{
 			//Keyboard
 			if(Input.GetKey(right) || (Input.GetAxis("Horizontal") > 0 && playerID == 2))
@@ -92,26 +151,34 @@ public class PlayerControl : MonoBehaviour
 			}
 		}
 
-		if(grounded && !interacting && (Input.GetKeyDown(jump)  || (Input.GetButtonDown("Jump") && playerID == 2)))
+		if(grounded && !usingConsole && (Input.GetKeyDown(jump)  || (Input.GetButtonDown("Jump") && playerID == 2)))
 		{
 			StartCoroutine(Jumping());
 		}
 
-		else if(!grounded && !interacting && (Input.GetKeyDown(jump)  || (Input.GetButtonDown("Jump") && playerID == 2)))
-			jumpCount = 2;
+		else if(!grounded && !usingConsole && (Input.GetKeyDown(jump)  || (Input.GetButtonDown("Jump") && playerID == 2)))
+			jumpedTwice = true;
 
-		if(!grounded && (Input.GetKey(jump)  || (Input.GetButton("Jump") && playerID == 2))  && jumpCount == 2)
+		if(!grounded && (Input.GetKey(jump)  || (Input.GetButton("Jump") && playerID == 2))  && jumpedTwice)
 			boosting = true;
 
 		else
 			boosting = false;
 
+		if(!grounded && Input.GetKeyDown(jump) && jumpedTwice)
+		{
+			powerMeterPhotonView.RPC("JetpackStart", PhotonTargets.AllBuffered, isPlayer1);
+		}
+		else if(!grounded && Input.GetKeyUp(jump) && jumpedTwice)
+		{
+			powerMeterPhotonView.RPC("JetpackStop", PhotonTargets.AllBuffered, isPlayer1);
+		}
 	}
 
 	// 2: Movement
 	void Movement()
 	{
-		if(!interacting)
+		if(!usingConsole)
 		{
 			if(movingRight && collidingWall != 1)
 			{
@@ -132,34 +199,28 @@ public class PlayerControl : MonoBehaviour
 			}
 			
 			
-			if(boosting && GetComponent<PlayerStats>().power > 0)
+			if(boosting)
 			{
 				playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, moveSpeed);
-				GetComponent<PlayerStats>().DecreasePower(true);
-
 				EnableParticles(true);
-
 				//GetComponent<PlayerAudio>().Boost(true);
 			}
 			
 			else
 			{
-
-				GetComponent<PlayerStats>().DecreasePower(false);
-
 				EnableParticles(false);
 
-//				try
-//				{
-//					GetComponent<PhotonView>().RPC("EnableParticles", PhotonPlayer.Find(otherPlayerID), false);
-//				}
-//
-//				catch(Exception e)
-//				{
-//					Debug.LogWarning(e);
-//				}
-//
-//				//GetComponent<PlayerAudio>().Boost(false);
+////				try
+////				{
+////					GetComponent<PhotonView>().RPC("EnableParticles", PhotonPlayer.Find(otherPlayerID), false);
+////				}
+////
+////				catch(Exception e)
+////				{
+////					Debug.LogWarning(e);
+////				}
+////
+////				//GetComponent<PlayerAudio>().Boost(false);
 			}
 			
 			
@@ -174,7 +235,7 @@ public class PlayerControl : MonoBehaviour
 			if(Physics2D.Raycast(feetCollider.bounds.center , -Vector2.up, feetCollider.bounds.extents.y + 0.01f, physicalColliders))//!!! .1f value?
 			{
 				grounded = true;
-				jumpCount = 0;
+				jumpedTwice = false;
 			}
 			
 			else
@@ -193,59 +254,7 @@ public class PlayerControl : MonoBehaviour
 		}	
 	}
 
-	// 3: Interact
-	void InteractControl()
-	{
-		if(Input.GetKeyDown(interact))
-		{
-			//Console
-			if(consoleOverlap)
-			{
-				if(interacting)
-				{
-					interacting = false;
-
-					interactObject.GetComponent<ConsoleProperties>().DeactivateConsole();
-					interactObject.GetComponent<ConsoleProperties>().endConsoleInteraction(gameObject);
-
-//					try
-//					{
-//						interactObject.GetComponent<PhotonView>().RPC("DeactivateConsole", PhotonPlayer.Find(otherPlayerID));
-//					}
-//
-//					catch(Exception e)
-//					{
-//						Debug.LogWarning(e);
-//                  }
-				}	
-				
-				else if(interactObject.GetComponent<ConsoleProperties>().occupied == false)
-				{
-					interacting = true;
-
-					interactObject.GetComponent<ConsoleProperties>().ActivateConsole(gameObject);
-					interactObject.GetComponent<ConsoleProperties>().startConsoleInteraction(gameObject);
-
-//					try
-//					{
-//						interactObject.GetComponent<PhotonView>().RPC("ActivateConsole", PhotonPlayer.Find(otherPlayerID), null);
-//					}
-//
-//					catch(Exception e)
-//					{
-//						Debug.LogWarning(e);
-//					}
-
-					GetComponent<AudioSource>().PlayDelayed(0f);
-					if(!tutorialViewed)
-					{
-						tutorialViewed = true;
-					}
-				}
-			}
-		}
-	}
-
+	// 3: Jumping
 	IEnumerator Jumping()
 	{
 		jumping = true;
@@ -271,6 +280,7 @@ public class PlayerControl : MonoBehaviour
 			Flip();	
 	}
 
+	// 5: Flip
 	void Flip()
 	{
 		// Switch the way the player is labelled as facing
@@ -281,62 +291,8 @@ public class PlayerControl : MonoBehaviour
 		theScale.x *= -1;
 		transform.localScale = theScale;
     }
-
-	//TRIGGER
-	void OnTriggerEnter2D(Collider2D collidercheck)
-	{     
-		//Console
-		if(collidercheck.gameObject.tag=="Console")
-		{
-			consoleOverlap=true;
-			interactObject = collidercheck.gameObject;
-			interactObject.GetComponent<ConsoleProperties>().showHideButtonOverlay(true);
-		} 
-
-		//Override
-		if(collidercheck.gameObject.tag=="Override")
-		{
-			overrideOverlap=true;
-		}  
-		
-		//JumpPad
-		if(collidercheck.gameObject.tag=="JumpPad")
-		{
-			GameObject jumpad = collidercheck.gameObject;
-			
-			if(jumpad.GetComponent<JumpPad>().on)
-			{
-				playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, 0);
-				playerRigidbody.AddForce(new Vector2(playerRigidbody.velocity.x, jumpad.GetComponent<JumpPad>().force));
-			}	
-		}	
-		
-		//Teleporter
-		if(collidercheck.gameObject.tag=="Teleporter")
-		{
-			teleporterOverlap=true;
-			interactObject = collidercheck.transform.parent.gameObject;
-		}
-	}
-
-	void OnTriggerExit2D(Collider2D collidercheck)
-	{
-		if(collidercheck.gameObject.tag=="Console")
-		{
-			consoleOverlap=false;
-			interactObject.GetComponent<ConsoleProperties>().showHideButtonOverlay(false);
-		}
-
-		//Override
-		if(collidercheck.gameObject.tag=="Override")
-		{
-			overrideOverlap=false;
-		} 
-		
-		if(collidercheck.gameObject.tag=="Teleporter")
-			teleporterOverlap=false;
-	}
-
+	
+	// 6: Enable Particles
 	[PunRPC]
 	void EnableParticles(bool enabled)
 	{

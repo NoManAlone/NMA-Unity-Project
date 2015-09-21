@@ -43,15 +43,11 @@ public class RoomBuilderScript : MonoBehaviour
 	public int doorCount;
 	public struct DoorProperties
 	{
-		public bool prePowered;
+		public bool openAtStart;
 		public bool top, bottom, left, right; //Orientation in walls.
 		public float offset; //Offset from centre axis of room.
 	}
 	public DoorProperties[] doors = new DoorProperties[0];
-	
-	//Console
-	public bool consoleRoom;
-	public float consoleOffset;
 
 	//Prefabs
 	Object roomAreaPrefab;
@@ -105,9 +101,6 @@ public class RoomBuilderScript : MonoBehaviour
 		BuildDoors();
 		//Create Walls
 		BuildWalls();
-		//Create Console
-		if(consoleRoom)
-			CreateConsole();
 
 		//Create Background Art
 		CreateBackground();
@@ -132,7 +125,7 @@ public class RoomBuilderScript : MonoBehaviour
 		
 		darknessOverlay.transform.SetParent(room.transform);
 		darknessOverlay.transform.localPosition = Vector2.zero;
-		darknessOverlay.transform.localScale = roomDimensions + new Vector2(2,2);
+		darknessOverlay.transform.localScale = roomDimensions + new Vector2(1, 1);
 		
 		if(preLit)
 			darknessOverlay.GetComponent<RoomLightingBehaviours>().preLit = true;
@@ -161,8 +154,10 @@ public class RoomBuilderScript : MonoBehaviour
 			door.name = "Door";
 			door.transform.SetParent(room.transform);
 
-			if(doors[counter].prePowered) //Sets door to be powered.
-				door.GetComponent<Power>().powered = true;
+			if(doors[counter].openAtStart) //Sets door to be powered.
+				door.GetComponent<DoorBehaviours>().open = true;
+			else
+				door.GetComponent<DoorBehaviours>().open = false;
 
 			if(doors[counter].top||doors[counter].bottom) //Sets rotation of the door.
 				door.transform.Rotate(0, 0, 90);
@@ -471,17 +466,6 @@ public class RoomBuilderScript : MonoBehaviour
 				}
 			}
 		}
-	}
-	
-	//Creates the console object in the room.
-	void CreateConsole()
-	{
-		consolePrefab = Resources.Load ("Console");
-		console = (GameObject)PrefabUtility.InstantiatePrefab(consolePrefab);
-		console.name = "Console";
-		console.transform.SetParent(room.transform);
-		
-		console.transform.localPosition = new Vector2(consoleOffset, -(roomBounds.extents.y) + console.GetComponent<Collider2D>().bounds.extents.y);
 	}
 
 	//Creates the background art canvas of the room.
