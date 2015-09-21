@@ -70,18 +70,6 @@ public class PlayerControl : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D collidercheck)
 	{  
-		//JumpPad
-		if(collidercheck.gameObject.tag=="JumpPad")
-		{
-			GameObject jumpad = collidercheck.gameObject;
-			
-			if(jumpad.GetComponent<JumpPad>().on)
-			{
-				playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, 0);
-				playerRigidbody.AddForce(new Vector2(playerRigidbody.velocity.x, jumpad.GetComponent<JumpPad>().force));
-			}	
-		}	
-		
 		//Teleporter
 		if(collidercheck.gameObject.tag=="Teleporter")
 		{
