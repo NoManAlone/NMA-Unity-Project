@@ -1,13 +1,18 @@
 fileFormatVersion: 2
 guid: 4149311679b804f4f991b500f3ac598e
-timeCreated: 1431105110
+timeCreated: 1442852956
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Helibot
+    21300000: Enemy
     21300002: Sweeperbot
     21300004: Scan Default
     21300006: Scan Detected
+    21300008: Enemy 2
+    21300010: EnemyBasic
+    21300012: EnemyOrb
+    21300014: SpotlightYellow
+    21300016: SpotlightRed
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -41,6 +46,7 @@ TextureImporter:
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
+  allowsAlphaSplitting: 0
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
@@ -53,45 +59,45 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: Helibot
+    - name: EnemyBasic
       rect:
         serializedVersion: 2
-        x: 147
-        y: 4398
-        width: 814
-        height: 423
+        x: 133
+        y: 4205
+        width: 454
+        height: 655
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Sweeperbot
+    - name: EnemyOrb
       rect:
         serializedVersion: 2
-        x: 1447
-        y: 3978
-        width: 456
-        height: 808
+        x: 1024
+        y: 4205
+        width: 413
+        height: 414
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Scan Default
+    - name: SpotlightYellow
       rect:
         serializedVersion: 2
-        x: 122
-        y: 3676
-        width: 1005
-        height: 520
-      alignment: 9
-      pivot: {x: .00865873229, y: .604736805}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Scan Detected
-      rect:
-        serializedVersion: 2
-        x: 122
-        y: 3099
-        width: 1005
+        x: 136
+        y: 2667
+        width: 1003
         height: 523
-      alignment: 9
-      pivot: {x: .00865873229, y: .597193658}
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: SpotlightRed
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 2091
+        width: 1003
+        height: 523
+      alignment: 0
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

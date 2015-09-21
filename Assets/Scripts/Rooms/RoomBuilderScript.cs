@@ -29,7 +29,7 @@ public class RoomBuilderScript : MonoBehaviour
 	public Vector2 roomDimensions;
 	public Vector2 roomPosition;
 	Bounds roomBounds;
-	public bool preLit;
+	public bool darkened, preLit;
 
 	//BG Art
 	public int selectedBGArt;
@@ -43,15 +43,11 @@ public class RoomBuilderScript : MonoBehaviour
 	public int doorCount;
 	public struct DoorProperties
 	{
-		public bool prePowered;
+		public bool openAtStart;
 		public bool top, bottom, left, right; //Orientation in walls.
 		public float offset; //Offset from centre axis of room.
 	}
 	public DoorProperties[] doors = new DoorProperties[0];
-	
-	//Console
-	public bool consoleRoom;
-	public float consoleOffset;
 
 	//Prefabs
 	Object roomAreaPrefab;
@@ -91,28 +87,35 @@ public class RoomBuilderScript : MonoBehaviour
 		roomArea.transform.localScale = roomDimensions;
 		roomBounds = roomArea.GetComponent<Collider2D>().bounds;
 
-		//Create Darkness Overlay
-		CreateDarkness();
-
 		//Creates Console View Canvas
 		CreateConsoleViewCanvas();
-		//Creates Lights Button
-		if(!preLit)
+
+		//Create Darkness Overlay and LightsButton
+		if(darkened)
+		{
+			CreateDarkness();
 			CreateLightsButton();
+		}
 
         //Create Doors
 		BuildDoors();
 		//Create Walls
 		BuildWalls();
-		//Create Console
-		if(consoleRoom)
-			CreateConsole();
 
 		//Create Background Art
 		CreateBackground();
 	}
 	
-
+	//Creates Console View Canvas.
+	void CreateConsoleViewCanvas()
+	{
+		consoleViewCanvasPrefab = Resources.Load ("Console View Canvas");
+		consoleViewCanvas = (GameObject)PrefabUtility.InstantiatePrefab(consoleViewCanvasPrefab);
+		
+		consoleViewCanvas.transform.SetParent(room.transform);
+		consoleViewCanvas.transform.localPosition = Vector2.zero;
+		consoleViewCanvas.GetComponent<RectTransform>().sizeDelta = roomDimensions;
+	}
 
 	//Creates the darkness overlay in the room for lighting effects.
 	void CreateDarkness()
@@ -128,17 +131,6 @@ public class RoomBuilderScript : MonoBehaviour
 			darknessOverlay.GetComponent<RoomLightingBehaviours>().preLit = true;
 		else
 			darknessOverlay.GetComponent<RoomLightingBehaviours>().preLit = false;
-	}
-	
-	//Creates Console View Canvas.
-	void CreateConsoleViewCanvas()
-	{
-		consoleViewCanvasPrefab = Resources.Load ("Console View Canvas");
-		consoleViewCanvas = (GameObject)PrefabUtility.InstantiatePrefab(consoleViewCanvasPrefab);
-
-		consoleViewCanvas.transform.SetParent(room.transform);
-		consoleViewCanvas.transform.localPosition = Vector2.zero;
-		consoleViewCanvas.GetComponent<RectTransform>().sizeDelta = roomDimensions;
 	}
 
 	//Creates room's lighting button on the button canvas for console view.
@@ -162,8 +154,10 @@ public class RoomBuilderScript : MonoBehaviour
 			door.name = "Door";
 			door.transform.SetParent(room.transform);
 
-			if(doors[counter].prePowered) //Sets door to be powered.
-				door.GetComponent<Power>().powered = true;
+			if(doors[counter].openAtStart) //Sets door to be powered.
+				door.GetComponent<DoorBehaviours>().open = true;
+			else
+				door.GetComponent<DoorBehaviours>().open = false;
 
 			if(doors[counter].top||doors[counter].bottom) //Sets rotation of the door.
 				door.transform.Rotate(0, 0, 90);
@@ -472,17 +466,6 @@ public class RoomBuilderScript : MonoBehaviour
 				}
 			}
 		}
-	}
-	
-	//Creates the console object in the room.
-	void CreateConsole()
-	{
-		consolePrefab = Resources.Load ("Console");
-		console = (GameObject)PrefabUtility.InstantiatePrefab(consolePrefab);
-		console.name = "Console";
-		console.transform.SetParent(room.transform);
-		
-		console.transform.localPosition = new Vector2(consoleOffset, -(roomBounds.extents.y) + console.GetComponent<Collider2D>().bounds.extents.y);
 	}
 
 	//Creates the background art canvas of the room.

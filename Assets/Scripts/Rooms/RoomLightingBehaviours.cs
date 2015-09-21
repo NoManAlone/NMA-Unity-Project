@@ -5,52 +5,62 @@ using System.Collections;
 public class RoomLightingBehaviours : MonoBehaviour
 {
 	public SpriteRenderer darknessRenderer;
-	bool fadingIn, fadingOut;
+	bool fadedIn, fadedOut;
 	public bool preLit, manualLit;
+	GameManager gameManager;
+	PowerManager powerManager;
+	PhotonView photonView;
 
 	void Awake()
 	{
+		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+		powerManager = GameObject.Find("PowerMeter").GetComponent<PowerManager>();
+		photonView = GetComponent<PhotonView>();
+
 		//Sets up room's lighting button.
-		if(!preLit)
-		{
-			transform.parent.FindChild("Console View Canvas").FindChild("Lights Button").GetComponent<Button>().onClick.AddListener(lightSwitchEvent);
-		}
+		transform.parent.FindChild("Console View Canvas").FindChild("Lights Button").GetComponent<Button>().onClick.AddListener(LightSwitchEvent);
 	}
 
-	//Fades out the darkness overlay if player enters room.
-	void OnTriggerEnter2D(Collider2D colliderCheck)
+	void OnJoinedRoom()
 	{
-		if(colliderCheck.tag == "Player")
-		{
-			if(!fadingOut)
+			//Fades out the darkness on awake if the room is meant to start off lit.
+			if(preLit)
+			{
+				powerManager.AlterThreshold(-10);
 				StartCoroutine(FadeOut());
-		}
-	}
-
-	//Fades in the darkness overlay if player exits room.
-	void OnTriggerExit2D(Collider2D colliderCheck)
-	{
-		if(colliderCheck.tag == "Player")
-		{
-			if(!fadingIn)
-				StartCoroutine(FadeIn());
-		}
+            }
+            else
+                fadedIn = true;
 	}
 
 	//Called via the room's lights button.
-	public void lightSwitchEvent()
+	public void LightSwitchEvent()
 	{
-		print("Switch clicked");
-		if(manualLit)
-			manualLit = false;
-		else
-			manualLit = true;
+		if(gameManager.myPlayer.GetComponent<PlayerControl>().usingConsole)
+		{
+			photonView.RPC("LightSwitchCall", PhotonTargets.AllBuffered);
+		}
+	}
+	
+	[PunRPC]
+	void LightSwitchCall()
+	{
+		if(fadedOut)
+		{
+			powerManager.AlterThreshold(10);
+			StartCoroutine(FadeIn());
+		}
+		else if(fadedIn && powerManager.power>=10)
+		{
+			powerManager.AlterThreshold(-10);
+			StartCoroutine(FadeOut());
+		}
 	}
 
 	IEnumerator FadeIn()
 	{
-		fadingOut = false;
-		fadingIn = true;
+		fadedOut = false;
+		fadedIn = true;
 		darknessRenderer.enabled = true;
 		Color placeholderColor = darknessRenderer.color;
 		float startTime = Time.time;
@@ -60,7 +70,7 @@ public class RoomLightingBehaviours : MonoBehaviour
 		{
 			placeholderColor.a = Mathf.Lerp(placeholderColor.a, 1f, ((Time.time-startTime)/placeholderColor.a)*Time.deltaTime*10);
 			darknessRenderer.color = placeholderColor;
-			if(fadingOut)
+			if(fadedOut)
 				break;
 			yield return null;
 		}
@@ -68,42 +78,22 @@ public class RoomLightingBehaviours : MonoBehaviour
 
 	IEnumerator FadeOut()
 	{
-		fadingIn = false;
-		fadingOut = true;
-
-		//If room is not pre-lit or powered, the lights only go up a tiny bit.
-		if(preLit||manualLit)
+		fadedIn = false;
+		fadedOut = true;
+		Color placeholderColor = darknessRenderer.color;
+		float startTime = Time.time;
+		
+		placeholderColor.a -= 0.2f;
+		while(placeholderColor.a > 0.02f)
 		{
-			Color placeholderColor = darknessRenderer.color;
-			float startTime = Time.time;
-			
-			placeholderColor.a -= 0.2f;
-			while(placeholderColor.a > 0.02f)
-			{
-				placeholderColor.a = Mathf.Lerp(placeholderColor.a, 0f, ((Time.time-startTime)/(placeholderColor.a))*Time.deltaTime*10);
-				darknessRenderer.color = placeholderColor;
-                if(fadingIn)
-                    break;
-                yield return null;
-			}
+			placeholderColor.a = Mathf.Lerp(placeholderColor.a, 0f, ((Time.time-startTime)/(placeholderColor.a))*Time.deltaTime*10);
+			darknessRenderer.color = placeholderColor;
+            if(fadedIn)
+                break;
+            yield return null;
+		}
 
-			if(!fadingIn)
-				darknessRenderer.enabled = false;
-        }
-        else
-		{
-			Color placeholderColor = darknessRenderer.color;
-			float startTime = Time.time;
-			
-			placeholderColor.a -= 0.2f;
-			while(placeholderColor.a > 0.85f)
-			{
-				placeholderColor.a = Mathf.Lerp(placeholderColor.a, 0f, ((Time.time-startTime)/(placeholderColor.a))*Time.deltaTime*10);
-				darknessRenderer.color = placeholderColor;
-				if(fadingIn)
-                    break;
-                yield return null;
-            }
-        }
+		if(!fadedIn)
+			darknessRenderer.enabled = false;
 	}
 }

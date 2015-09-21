@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 using System.Collections;
@@ -47,20 +47,13 @@ public class RoomBuilderEditor : Editor
 		GUILayout.Label("Right");
 		builderScript.wallRight = EditorGUILayout.Toggle(builderScript.wallRight);
 		EditorGUILayout.EndHorizontal();
-
-		//Console
-		GUILayout.Label("");
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("Console:", boldFont);
-		builderScript.consoleRoom = EditorGUILayout.Toggle(builderScript.consoleRoom);
-		GUILayout.Label("Offset:");
-		builderScript.consoleOffset = EditorGUILayout.FloatField(builderScript.consoleOffset, GUILayout.MaxWidth(100));
-		GUILayout.EndHorizontal();
 		
-		//Prelit
+		//Darkened and Prelit
 		GUILayout.Label("");
 		GUILayout.BeginHorizontal();
-		GUILayout.Label ("Prelit:", boldFont);
+		GUILayout.Label ("Darkened:", boldFont);
+		builderScript.darkened = EditorGUILayout.Toggle(builderScript.darkened);
+		GUILayout.Label ("Prelit:");
 		builderScript.preLit = EditorGUILayout.Toggle(builderScript.preLit);
 		GUILayout.EndHorizontal();
 
@@ -137,8 +130,8 @@ public class RoomBuilderEditor : Editor
 			builderScript.doors[counter].offset = EditorGUILayout.FloatField(builderScript.doors[counter].offset, GUILayout.MaxWidth(70));
 			GUILayout.EndHorizontal();
 			GUILayout.BeginHorizontal();
-			GUILayout.Label("Powered:");
-			builderScript.doors[counter].prePowered = EditorGUILayout.Toggle(builderScript.doors[counter].prePowered, GUILayout.MaxWidth(70));
+			GUILayout.Label("Open:");
+			builderScript.doors[counter].openAtStart = EditorGUILayout.Toggle(builderScript.doors[counter].openAtStart, GUILayout.MaxWidth(70));
 			GUILayout.EndHorizontal();
 			GUILayout.EndHorizontal();
 		}

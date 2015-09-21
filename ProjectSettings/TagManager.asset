@@ -18,6 +18,7 @@ TagManager:
   - Helibot
   - Override
   - Sweeperbot
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -33,9 +34,9 @@ TagManager:
   - Platform
   - Art
   - Enemy
-  - 
-  - 
-  - 
+  - ConsoleUI
+  - AllViews
+  - PlayerInvincible
   - 
   - 
   - 
@@ -70,12 +71,12 @@ TagManager:
   - name: Player
     uniqueID: 3447065145
     locked: 0
+  - name: Enemy
+    uniqueID: 3512740935
+    locked: 0
   - name: Foreground
     uniqueID: 4109044935
     locked: 0
   - name: ConsoleUI
     uniqueID: 2922166813
-    locked: 0
-  - name: Enemy
-    uniqueID: 3512740935
     locked: 0

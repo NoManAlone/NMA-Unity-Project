@@ -6,15 +6,21 @@ public class GameManager : MonoBehaviour
 	public bool testing_1p, testing_2p;
 
 	public static bool t1p, t2p;
+	public bool debugging;
+	public static bool debug;
 
 	public Transform p1Spawn,p2Spawn;
 	public GameObject splitScreenDivider;
 
-	void Start () 
+	public GameObject myPlayer;
+
+	void Awake () 
 	{
 		//These variables can be called directly from any script
 		t1p = testing_1p;
 		t2p = testing_2p;
+
+		debug = debugging;
 
 		if(testing_1p)
 		{
@@ -23,7 +29,6 @@ public class GameManager : MonoBehaviour
 
 		else if(testing_2p)
 		{
-			GameObject.Find("OxygenMeterAndPowerMeter").SetActive(false);
 			splitScreenDivider.SetActive(true);
 
 			Instantiate(Resources.Load ("Player 1 Split") , p1Spawn.position, Quaternion.identity);
@@ -64,7 +69,6 @@ public class GameManager : MonoBehaviour
 
 		else
 			SpawnPlayer("Player 2", p1Spawn.position);
-
 	}
 
 	void SpawnPlayer(string playerName, Vector3 spawnPosition)
@@ -73,9 +77,10 @@ public class GameManager : MonoBehaviour
 
 		//Enable player scripts
 		player.GetComponent<PlayerControl>().enabled = true;
-		player.GetComponent<PlayerStats>().enabled = true;
 		player.GetComponent<PlayerAudio>().enabled = true;
 		player.transform.FindChild("Camera").gameObject.SetActive(true);
 		//player.transform.FindChild("Particle Emitter").gameObject.SetActive(true);
+
+		myPlayer = player;
 	}
 }
