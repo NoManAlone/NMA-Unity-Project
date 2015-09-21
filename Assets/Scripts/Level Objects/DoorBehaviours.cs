@@ -17,7 +17,7 @@ public class DoorBehaviours : MonoBehaviour
 	void Awake()
 	{
 		//Sets up door's console button.
-		transform.FindChild("Console View Overlay").FindChild("Door Button").GetComponent<Button>().onClick.AddListener(DoorSwitchEvent);
+		transform.GetChild(0).GetChild(0).GetComponent<Button>().onClick.AddListener(DoorSwitchEvent);
 
 		sfx = GetComponents<AudioSource>();
 		doorCollider = GetComponent<BoxCollider2D>();
@@ -26,11 +26,12 @@ public class DoorBehaviours : MonoBehaviour
 		photonView = GetComponent<PhotonView>();
 		powerManager = GameObject.Find("PowerMeter").GetComponent<PowerManager>();
 		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+	}
 
-		if(open)
-			photonView.RPC("OpenDoor", PhotonTargets.AllBuffered);
-		else
-			photonView.RPC("CloseDoor", PhotonTargets.AllBuffered);
+	void OnJoinedRoom()
+	{
+		if(open && powerManager.power >= 5)
+			OpenDoor();
 	}
 
 	public void DoorSwitchEvent()
@@ -38,15 +39,9 @@ public class DoorBehaviours : MonoBehaviour
 		if(gameManager.myPlayer.GetComponent<PlayerControl>().usingConsole)
 		{
 			if(!open && powerManager.power >= 5)
-			{
-				powerManager.AlterThreshold(-5);
 				photonView.RPC("OpenDoor", PhotonTargets.AllBuffered);
-			}
 			else
-			{
-				powerManager.AlterThreshold(5);
 				photonView.RPC("CloseDoor", PhotonTargets.AllBuffered);
-			}
 		}
 	}
 
@@ -57,6 +52,8 @@ public class DoorBehaviours : MonoBehaviour
 		doorAnimator.SetBool("Open", true);
 		sfx[0].PlayDelayed(0f);
 		open = true;
+		
+		powerManager.AlterThreshold(-5);
 	}
 
 	[PunRPC]
@@ -66,5 +63,7 @@ public class DoorBehaviours : MonoBehaviour
 		doorAnimator.SetBool("Open", false);
 		sfx[1].PlayDelayed(0f);
 		open = false;
+
+		powerManager.AlterThreshold(5);
 	}
 }

@@ -19,15 +19,18 @@ public class RoomLightingBehaviours : MonoBehaviour
 
 		//Sets up room's lighting button.
 		transform.parent.FindChild("Console View Canvas").FindChild("Lights Button").GetComponent<Button>().onClick.AddListener(LightSwitchEvent);
+	}
 
-		//Fades out the darkness on awake if the room is meant to start off lit.
-		if(preLit)
-		{
-			powerManager.AlterThreshold(-10);
-			StartCoroutine(FadeOut());
-		}
-		else
-			fadedIn = true;
+	void OnJoinedRoom()
+	{
+			//Fades out the darkness on awake if the room is meant to start off lit.
+			if(preLit)
+			{
+				powerManager.AlterThreshold(-10);
+				StartCoroutine(FadeOut());
+            }
+            else
+                fadedIn = true;
 	}
 
 	//Called via the room's lights button.
