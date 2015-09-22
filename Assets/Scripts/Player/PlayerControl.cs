@@ -47,6 +47,8 @@ public class PlayerControl : MonoBehaviour
 	{
 		powerMeterPhotonView = GameObject.Find("PowerMeter").GetComponent<PhotonView>();
 
+		consoleCamera = transform.GetChild(1).gameObject;
+
 		//Initialises PowerManager.
 		powerManager = GameObject.Find("PowerMeter").GetComponent<PowerManager>();
 
@@ -104,6 +106,7 @@ public class PlayerControl : MonoBehaviour
 			}
 			else
 			{
+				consoleCamera.GetComponent<ConsoleCameraProperties>().SetPositionAndSize();
 				playerCamera.SetActive(false);
 				consoleCamera.SetActive(true);
 				usingConsole = true;

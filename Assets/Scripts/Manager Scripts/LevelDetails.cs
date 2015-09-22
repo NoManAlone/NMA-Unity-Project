@@ -8,7 +8,7 @@ public class LevelDetails : MonoBehaviour
 	 */
 
 	public Vector2 levelDimensions;
-	public Vector2 levelCentre;
+	public Vector3 levelCentre;
 	
 	float Xmin = 0, Xmax = 0, Ymin = 0, Ymax = 0;
 
@@ -18,7 +18,7 @@ public class LevelDetails : MonoBehaviour
 	}
 	public RoomDetails[] roomDetailsList;
 
-	void Start()
+	void Awake()
 	{
 		roomDetailsList = new RoomDetails[0];
 		FindAllRooms(); //Find all rooms.
@@ -29,12 +29,12 @@ public class LevelDetails : MonoBehaviour
 
 	void FindAllRooms() //Populates the array roomDetailsList.
 	{
-		GameObject[] allRooms = GameObject.FindGameObjectsWithTag("RoomArea");
+		GameObject[] allRooms = GameObject.FindGameObjectsWithTag("Room");
 		for(int counter = 0; counter < allRooms.Length; counter++)
 		{
 			System.Array.Resize(ref roomDetailsList, roomDetailsList.Length+1);
 			roomDetailsList[counter].roomPosition = allRooms[counter].transform.position;
-			roomDetailsList[counter].roomScale = allRooms[counter].transform.lossyScale;
+			roomDetailsList[counter].roomScale = allRooms[counter].transform.FindChild("RoomArea").lossyScale;
 		}
 	}
 
@@ -44,21 +44,21 @@ public class LevelDetails : MonoBehaviour
 		{
 			if(counter == 0) //Set for first case.
 			{
-				Xmin = roomDetailsList[counter].roomPosition.x - roomDetailsList[counter].roomScale.x/2;
-				Xmax = roomDetailsList[counter].roomPosition.x + roomDetailsList[counter].roomScale.x/2;
-				Ymin = roomDetailsList[counter].roomPosition.y - roomDetailsList[counter].roomScale.y/2;
-				Ymax = roomDetailsList[counter].roomPosition.y + roomDetailsList[counter].roomScale.y/2;
+				Xmin = roomDetailsList[counter].roomPosition.x - roomDetailsList[counter].roomScale.x;
+				Xmax = roomDetailsList[counter].roomPosition.x + roomDetailsList[counter].roomScale.x;
+				Ymin = roomDetailsList[counter].roomPosition.y - roomDetailsList[counter].roomScale.y;
+				Ymax = roomDetailsList[counter].roomPosition.y + roomDetailsList[counter].roomScale.y;
 			}
 			else //Check for every other case.
 			{
-				if ((roomDetailsList[counter].roomPosition.x - roomDetailsList[counter].roomScale.x/2) < Xmin)
-					Xmin = roomDetailsList[counter].roomPosition.x - roomDetailsList[counter].roomScale.x/2;
-				if ((roomDetailsList[counter].roomPosition.x + roomDetailsList[counter].roomScale.x/2) > Xmax)
-					Xmax = roomDetailsList[counter].roomPosition.x + roomDetailsList[counter].roomScale.x/2;
-				if ((roomDetailsList[counter].roomPosition.y - roomDetailsList[counter].roomScale.y/2) < Ymin)
-					Ymin = roomDetailsList[counter].roomPosition.y - roomDetailsList[counter].roomScale.y/2;
-				if ((roomDetailsList[counter].roomPosition.y + roomDetailsList[counter].roomScale.y/2) > Ymax)
-					Ymax = roomDetailsList[counter].roomPosition.y + roomDetailsList[counter].roomScale.y/2;
+				if ((roomDetailsList[counter].roomPosition.x - roomDetailsList[counter].roomScale.x) < Xmin)
+					Xmin = roomDetailsList[counter].roomPosition.x - roomDetailsList[counter].roomScale.x;
+				if ((roomDetailsList[counter].roomPosition.x + roomDetailsList[counter].roomScale.x) > Xmax)
+					Xmax = roomDetailsList[counter].roomPosition.x + roomDetailsList[counter].roomScale.x;
+				if ((roomDetailsList[counter].roomPosition.y - roomDetailsList[counter].roomScale.y) < Ymin)
+					Ymin = roomDetailsList[counter].roomPosition.y - roomDetailsList[counter].roomScale.y;
+				if ((roomDetailsList[counter].roomPosition.y + roomDetailsList[counter].roomScale.y) > Ymax)
+					Ymax = roomDetailsList[counter].roomPosition.y + roomDetailsList[counter].roomScale.y;
 			}
 		}
 	}
