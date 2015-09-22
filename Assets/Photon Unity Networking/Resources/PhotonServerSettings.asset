@@ -44,4 +44,7 @@ MonoBehaviour:
   - CloseDoor
   - LightSwitchCall
   - OpenDoor
+  - FanOff
+  - FanOn
+  - DarknessFadesCall
   DisableAutoOpenWizard: 1

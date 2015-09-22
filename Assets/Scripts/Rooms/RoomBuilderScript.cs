@@ -128,9 +128,9 @@ public class RoomBuilderScript : MonoBehaviour
 		darknessOverlay.transform.localScale = roomDimensions;
 		
 		if(preLit)
-			darknessOverlay.GetComponent<RoomLightingBehaviours>().preLit = true;
+			darknessOverlay.GetComponent<DarknessBehaviours>().preLit = true;
 		else
-			darknessOverlay.GetComponent<RoomLightingBehaviours>().preLit = false;
+			darknessOverlay.GetComponent<DarknessBehaviours>().preLit = false;
 	}
 
 	//Creates room's lighting button on the button canvas for console view.
