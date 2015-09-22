@@ -17,7 +17,7 @@ public class DoorBehaviours : MonoBehaviour
 	void Awake()
 	{
 		//Sets up door's console button.
-		transform.GetChild(0).GetChild(0).GetComponent<Button>().onClick.AddListener(DoorSwitchEvent);
+		transform.GetChild(0).GetChild(0).GetComponent<Button>().onClick.AddListener(DoorClickEvent);
 
 		sfx = GetComponents<AudioSource>();
 		doorCollider = GetComponent<BoxCollider2D>();
@@ -34,7 +34,7 @@ public class DoorBehaviours : MonoBehaviour
 			OpenDoor();
 	}
 
-	public void DoorSwitchEvent()
+	public void DoorClickEvent()
 	{
 		if(gameManager.myPlayer.GetComponent<PlayerControl>().usingConsole)
 		{
