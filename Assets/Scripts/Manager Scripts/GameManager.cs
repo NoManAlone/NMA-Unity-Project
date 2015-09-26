@@ -3,36 +3,25 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour 
 {
-	public bool testing_1p, testing_2p;
-
-	public static bool t1p, t2p;
+	public bool testing;
+	public static bool test;
 	public bool debugging;
 	public static bool debug;
 
-	public Transform p1Spawn,p2Spawn;
-	public GameObject splitScreenDivider;
+	public Transform spawn;
 
 	public GameObject myPlayer;
 
 	void Awake () 
 	{
 		//These variables can be called directly from any script
-		t1p = testing_1p;
-		t2p = testing_2p;
+		test = testing;
 
 		debug = debugging;
 
-		if(testing_1p)
+		if(testing)
 		{
-			Instantiate(Resources.Load ("Player 1 Test") , p1Spawn.position, Quaternion.identity);
-		}
-
-		else if(testing_2p)
-		{
-			splitScreenDivider.SetActive(true);
-
-			Instantiate(Resources.Load ("Player 1 Split") , p1Spawn.position, Quaternion.identity);
-			Instantiate(Resources.Load ("Player 2 Split") , p2Spawn.position, Quaternion.identity);
+			Instantiate(Resources.Load ("Player 1 Test") , spawn.position, Quaternion.identity);
 		}
 
 		else
@@ -65,10 +54,10 @@ public class GameManager : MonoBehaviour
 		Debug.Log("Joined Room");
 
 		if(PhotonNetwork.countOfPlayersInRooms == 0)
-			SpawnPlayer("Player 1", p1Spawn.position);
+			SpawnPlayer("Player 1", spawn.position);
 
 		else
-			SpawnPlayer("Player 2", p1Spawn.position);
+			SpawnPlayer("Player 2", spawn.position + new Vector3(-5,0,0));
 	}
 
 	void SpawnPlayer(string playerName, Vector3 spawnPosition)
