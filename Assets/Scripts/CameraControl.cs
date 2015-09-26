@@ -116,8 +116,6 @@ public class CameraControl : MonoBehaviour
 
 	public void snapToConsoleView(Vector2 targetPosition, float targetSize, GameObject player)
 	{
-		if(GameManager.t2p)
-			targetSize *=2;
 
 		consoleView = true;
 
