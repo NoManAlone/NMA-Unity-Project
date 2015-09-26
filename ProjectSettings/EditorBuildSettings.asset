@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/Test.unity
+    path: Assets/Scenes/Donnchadh.unity
   - enabled: 0
     path: Assets/Scenes/Main Menu.unity
   - enabled: 0
