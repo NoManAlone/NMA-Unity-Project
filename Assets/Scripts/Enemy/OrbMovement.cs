@@ -5,7 +5,7 @@ public class OrbMovement : MonoBehaviour
 {
 
     public int startCorner;//must be value from 0 - 3
-    public bool moveClockwise;
+    public int moveClockwise;
     Vector3[] patrolPositions;
 
     bool roomSet;
@@ -32,7 +32,7 @@ public class OrbMovement : MonoBehaviour
             if (transform.position == patrolPositions[nextPatrolPos])
             {
 
-                if(moveClockwise)
+                if(moveClockwise == 0)
                 {
                     if (nextPatrolPos == 3)
                         nextPatrolPos = 0;
@@ -77,7 +77,7 @@ public class OrbMovement : MonoBehaviour
 
         transform.position = patrolPositions[startCorner];
         
-        if(moveClockwise)
+        if(moveClockwise == 0)
         {
             if (startCorner == 3)
                 nextPatrolPos = 0;
