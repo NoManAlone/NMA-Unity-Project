@@ -60,16 +60,28 @@ public class GameManager : MonoBehaviour
 			SpawnPlayer("Player 2", spawn.position + new Vector3(-5,0,0));
 	}
 
-	void SpawnPlayer(string playerName, Vector3 spawnPosition)
-	{
-		GameObject player = PhotonNetwork.Instantiate(playerName , spawnPosition, Quaternion.identity, 0);
+    void SpawnPlayer(string playerName, Vector3 spawnPosition)
+    {
+        GameObject player = PhotonNetwork.Instantiate(playerName, spawnPosition, Quaternion.identity, 0);
 
-		//Enable player scripts
-		player.GetComponent<PlayerControl>().enabled = true;
-		player.GetComponent<PlayerAudio>().enabled = true;
-		player.transform.FindChild("Camera").gameObject.SetActive(true);
-		//player.transform.FindChild("Particle Emitter").gameObject.SetActive(true);
+        //Enable player scripts
+        player.GetComponent<PlayerControl>().enabled = true;
+        player.GetComponent<PlayerAudio>().enabled = true;
+        player.transform.FindChild("Camera").gameObject.SetActive(true);
+        //player.transform.FindChild("Particle Emitter").gameObject.SetActive(true);
 
-		myPlayer = player;
-	}
+        myPlayer = player;
+
+        if (PhotonNetwork.isMasterClient)
+        {
+            Debug.Log("Is MasterClient");
+
+            GameObject[] enemySpawners = GameObject.FindGameObjectsWithTag("EnemySpawner");
+
+            foreach(GameObject enemySpawner in enemySpawners)
+            {
+                enemySpawner.GetComponent<EnemySpawnScript>().SpawnEnemy();
+            }
+        }
+    }
 }
