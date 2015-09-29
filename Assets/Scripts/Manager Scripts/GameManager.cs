@@ -24,41 +24,56 @@ public class GameManager : MonoBehaviour
 			Instantiate(Resources.Load ("Player 1 Test") , spawn.position, Quaternion.identity);
 		}
 
-		else
-		{
-			PhotonNetwork.ConnectUsingSettings("v4.2");
-		}
+		//else
+		//{
+		//	PhotonNetwork.ConnectUsingSettings("v4.2");
+		//}
 	}
 
-	void OnConnectedToPhoton()
-	{
-		Debug.Log("Connected to Photon");
-	}
+    void Start()
+    {
+        PhotonNetwork.isMessageQueueRunning = true;
 
-	void OnFailedToConnectToPhoton()
-	{
-		Debug.Log("Failed to connect to Photon");
-	}
+        if (PhotonNetwork.isMasterClient)
+        {
+            SpawnPlayer("Player 1", spawn.position);
+        }
 
-	//Called if Auto-Join Lobby is true in PhotonServerSettings asset
-	void OnJoinedLobby()
-	{
-		Debug.Log("Joined Lobby");
+        else
+        {
+            SpawnPlayer("Player 2", spawn.position + new Vector3(-5, 0, 0));
+        }
+    }
 
-		RoomOptions roomOptions = new RoomOptions() { isVisible = false, maxPlayers = 2 };
-		PhotonNetwork.JoinOrCreateRoom("Game", roomOptions, TypedLobby.Default);
-	}
+    //void OnConnectedToPhoton()
+    //{
+    //	Debug.Log("Connected to Photon");
+    //}
 
-	void OnJoinedRoom()
-	{	
-		Debug.Log("Joined Room");
+    //void OnFailedToConnectToPhoton()
+    //{
+    //	Debug.Log("Failed to connect to Photon");
+    //}
 
-		if(PhotonNetwork.countOfPlayersInRooms == 0)
-			SpawnPlayer("Player 1", spawn.position);
+    ////Called if Auto-Join Lobby is true in PhotonServerSettings asset
+    //void OnJoinedLobby()
+    //{
+    //	Debug.Log("Joined Lobby");
 
-		else
-			SpawnPlayer("Player 2", spawn.position + new Vector3(-5,0,0));
-	}
+    //	RoomOptions roomOptions = new RoomOptions() { isVisible = false, maxPlayers = 2 };
+    //	PhotonNetwork.JoinOrCreateRoom("Game", roomOptions, TypedLobby.Default);
+    //}
+
+    //void OnJoinedRoom()
+    //{	
+    //	Debug.Log("Joined Room");
+
+    //	if(PhotonNetwork.countOfPlayersInRooms == 0)
+    //		SpawnPlayer("Player 1", spawn.position);
+
+    //	else
+    //		SpawnPlayer("Player 2", spawn.position + new Vector3(-5,0,0));
+    //}
 
     void SpawnPlayer(string playerName, Vector3 spawnPosition)
     {
@@ -74,11 +89,10 @@ public class GameManager : MonoBehaviour
 
         if (PhotonNetwork.isMasterClient)
         {
-            Debug.Log("Is MasterClient");
 
             GameObject[] enemySpawners = GameObject.FindGameObjectsWithTag("EnemySpawner");
 
-            foreach(GameObject enemySpawner in enemySpawners)
+            foreach (GameObject enemySpawner in enemySpawners)
             {
                 enemySpawner.GetComponent<EnemySpawnScript>().SpawnEnemy();
             }
